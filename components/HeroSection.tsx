@@ -128,7 +128,7 @@ export default function HeroSection() {
             style={{
               fontFamily: 'var(--font-space-grotesk)',
               fontWeight: 800,
-              fontSize: 'clamp(2.4rem, 6.5vw, 5.5rem)',
+              fontSize: 'clamp(1.9rem, 4.6vw, 4.5rem)',
             }}
           >
             {/* Line 1 — "Transformando [palavra]" sempre juntos */}
