@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = DEMO_PROJECTS_DATA.find((p) => p.slug === slug)
   if (!project) return { title: 'Projeto não encontrado' }
   return {
-    title: `${project.title} | Lucas Oliveira`,
+    title: `${project.title} | Mixael Sevla`,
     description: project.description ?? project.short_description ?? '',
   }
 }

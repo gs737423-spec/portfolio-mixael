@@ -8,9 +8,7 @@ const WORDS = ['momentos', 'histórias', 'emoções', 'memórias']
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
   const wordRef = useRef<HTMLSpanElement>(null)
-  const wordIndexRef = useRef(0)
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -18,46 +16,39 @@ export default function HeroSection() {
   })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0])
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.06])
 
-  // Animated rotating word
+  // Animated rotating word — direct DOM to avoid React re-render flicker
   useEffect(() => {
     const el = wordRef.current
     if (!el) return
     let idx = 0
     const rotate = () => {
-      el.style.transition = 'opacity 0.3s ease, transform 0.3s ease'
       el.style.opacity = '0'
-      el.style.transform = 'translateY(10px)'
+      el.style.transform = 'translateY(12px)'
       setTimeout(() => {
         idx = (idx + 1) % WORDS.length
         el.textContent = WORDS[idx]
         el.style.opacity = '1'
         el.style.transform = 'translateY(0)'
-      }, 300)
+      }, 320)
     }
-    const interval = setInterval(rotate, 2500)
+    const interval = setInterval(rotate, 2800)
     return () => clearInterval(interval)
   }, [])
 
-  const handleScroll = () => {
-    const el = document.getElementById('portfolio')
+  const handleScroll = (target: string) => {
+    const el = document.getElementById(target)
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
   const containerVariants = {
     hidden: {},
-    visible: {
-      transition: { staggerChildren: 0.12, delayChildren: 0.4 },
-    },
+    visible: { transition: { staggerChildren: 0.14, delayChildren: 0.35 } },
   }
   const itemVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
-    },
+    hidden: { opacity: 0, y: 36 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } },
   }
 
   return (
@@ -66,148 +57,128 @@ export default function HeroSection() {
       className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-[#050505]"
       aria-label="Hero"
     >
-      {/* Background Video / Gradient */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        style={{ scale }}
-      >
-        {/* Gradient animated background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#050505] via-[#080510] to-[#050505]" />
+      {/* ── Background ── */}
+      <motion.div className="absolute inset-0 z-0" style={{ scale }}>
+        {/* Base gradient */}
+        <div className="absolute inset-0 bg-[#050505]" />
 
-        {/* Orb glow effects */}
+        {/* Orb top-left — não sobrepõe o texto */}
         <motion.div
-          className="orb w-[600px] h-[600px] bg-[#8B5CF6] top-[-200px] left-[-150px] opacity-10"
-          animate={{
-            x: [0, 40, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          className="orb w-[700px] h-[700px] bg-[#8B5CF6] top-[-280px] left-[-200px] opacity-[0.08]"
+          animate={{ x: [0, 50, 0], y: [0, 30, 0] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
         />
+        {/* Orb bottom-right */}
         <motion.div
-          className="orb w-[500px] h-[500px] bg-[#A855F7] bottom-[-100px] right-[-100px] opacity-8"
-          animate={{
-            x: [0, -30, 0],
-            y: [0, -40, 0],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="orb w-[600px] h-[600px] bg-[#A855F7] bottom-[-160px] right-[-160px] opacity-[0.07]"
+          animate={{ x: [0, -35, 0], y: [0, -45, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
         />
-        <motion.div
-          className="orb w-[300px] h-[300px] bg-[#C084FC] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5"
-          animate={{ scale: [1, 1.3, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        {/* Grid overlay */}
+        {/* Subtle grid */}
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.025]"
           style={{
-            backgroundImage: `
-              linear-gradient(rgba(139,92,246,1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(139,92,246,1) 1px, transparent 1px)
-            `,
+            backgroundImage:
+              'linear-gradient(rgba(139,92,246,1) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,1) 1px,transparent 1px)',
             backgroundSize: '80px 80px',
           }}
         />
-
-        {/* Vignette */}
+        {/* Edge vignette — não cobre texto */}
         <div
-          className="absolute inset-0 opacity-60"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, #050505 100%)' }}
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 90% 70% at 50% 50%, transparent 30%, rgba(5,5,5,0.7) 100%)',
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505] opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505] opacity-40" />
       </motion.div>
 
-      {/* Letterbox effect */}
+      {/* Letterbox bars */}
       <div className="letterbox-top" />
       <div className="letterbox-bottom" />
 
-      {/* Content */}
+      {/* ── Content ── */}
       <motion.div
         style={{ y, opacity }}
-        className="relative z-10 max-w-7xl mx-auto px-6 text-center"
+        className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center"
       >
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-col items-center gap-6"
+          className="flex flex-col items-center gap-7"
         >
-          {/* Label */}
+          {/* Category label */}
           <motion.div variants={itemVariants} className="flex items-center gap-3">
-            <div className="w-8 h-[1px] bg-[#8B5CF6] shadow-[0_0_8px_#8B5CF6]" />
+            <div className="w-8 h-px bg-[#8B5CF6] shadow-[0_0_8px_#8B5CF6]" />
             <span
-              className="text-[11px] font-600 tracking-[0.3em] uppercase text-[#8B5CF6]"
+              className="text-[10px] font-semibold tracking-[0.32em] uppercase text-[#8B5CF6]"
               style={{ fontFamily: 'var(--font-space-grotesk)' }}
             >
               Fotografia & Produção Audiovisual
             </span>
-            <div className="w-8 h-[1px] bg-[#8B5CF6] shadow-[0_0_8px_#8B5CF6]" />
+            <div className="w-8 h-px bg-[#8B5CF6] shadow-[0_0_8px_#8B5CF6]" />
           </motion.div>
 
-          {/* Main Title */}
+          {/* ── Main Title ── */}
           <motion.h1
             variants={itemVariants}
-            className="font-display font-800 leading-[1.05] tracking-tight text-center"
+            className="leading-[1.08] tracking-tight text-center"
             style={{
               fontFamily: 'var(--font-space-grotesk)',
               fontWeight: 800,
-              fontSize: 'clamp(2.8rem, 8vw, 6rem)',
+              fontSize: 'clamp(2.4rem, 6.5vw, 5.5rem)',
             }}
           >
-            Transformando{' '}
-            <span className="gradient-text glow-text inline-block">
+            {/* Line 1 — "Transformando [palavra]" sempre juntos */}
+            <span className="block whitespace-nowrap">
+              <span className="text-white">Transformando </span>
               <span
                 ref={wordRef}
-                className="inline-block transition-all"
-                style={{ minWidth: 'clamp(120px, 30vw, 280px)' }}
+                className="gradient-text inline-block"
+                style={{
+                  transition: 'opacity 0.32s ease, transform 0.32s ease',
+                  textShadow: '0 0 40px rgba(139,92,246,0.5)',
+                  fontStyle: 'italic',
+                }}
               >
                 momentos
               </span>
             </span>
-            <br />
-            em histórias{' '}
-            <span
-              className="relative inline-block"
-              style={{
-                WebkitTextStroke: '1px rgba(139,92,246,0.6)',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              inesquecíveis
+
+            {/* Line 2 */}
+            <span className="block mt-1">
+              <span className="text-white">em histórias </span>
+              <span
+                style={{
+                  WebkitTextStroke: '1.5px rgba(192,132,252,0.7)',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
+                inesquecíveis
+              </span>
+              <span className="gradient-text">.</span>
             </span>
-            <span className="gradient-text">.</span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
             variants={itemVariants}
-            className="text-[#A1A1AA] text-lg max-w-xl leading-relaxed"
-            style={{ fontFamily: 'var(--font-inter)' }}
+            className="text-[#A1A1AA] text-base md:text-lg max-w-lg leading-relaxed"
+            style={{ fontFamily: 'var(--font-inter)', fontWeight: 300 }}
           >
             Fotografia e produção audiovisual para marcas, eventos e pessoas.
-            <br />
-            <span className="text-white/60 text-sm">São Paulo, Brasil</span>
+            <span className="block text-[#555] text-sm mt-1">São Paulo, Brasil</span>
           </motion.p>
 
-          {/* Buttons */}
-          <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center gap-4 mt-2"
-          >
-            <button
-              onClick={() => handleScroll()}
-              className="btn-primary group"
-            >
-              <Play size={14} className="group-hover:scale-110 transition-transform" />
+          {/* CTAs */}
+          <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4">
+            <button onClick={() => handleScroll('portfolio')} className="btn-primary group">
+              <Play size={13} className="group-hover:scale-110 transition-transform" />
               Ver Portfólio
             </button>
-            <button
-              onClick={() => {
-                const el = document.getElementById('contato')
-                if (el) el.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="btn-outline"
-            >
+            <button onClick={() => handleScroll('contato')} className="btn-outline">
               Solicitar Orçamento
             </button>
           </motion.div>
@@ -215,25 +186,25 @@ export default function HeroSection() {
           {/* Stats */}
           <motion.div
             variants={itemVariants}
-            className="flex items-center gap-8 mt-6 pt-8 border-t border-[rgba(139,92,246,0.1)]"
+            className="flex items-center gap-10 pt-8 mt-2 border-t border-[rgba(139,92,246,0.12)]"
           >
             {[
-              { value: '500+', label: 'Projetos realizados' },
-              { value: '8', label: 'Anos de experiência' },
-              { value: '300+', label: 'Clientes satisfeitos' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
+              { value: '500+', label: 'Projetos' },
+              { value: '8+', label: 'Anos' },
+              { value: '300+', label: 'Clientes' },
+            ].map((s) => (
+              <div key={s.label} className="text-center">
                 <div
-                  className="font-display font-800 text-2xl gradient-text"
+                  className="gradient-text font-display font-extrabold text-2xl leading-none"
                   style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
                 >
-                  {stat.value}
+                  {s.value}
                 </div>
                 <div
-                  className="text-[11px] text-[#A1A1AA] mt-1 tracking-wide uppercase"
+                  className="text-[10px] text-[#555] mt-1.5 tracking-[0.18em] uppercase"
                   style={{ fontFamily: 'var(--font-inter)' }}
                 >
-                  {stat.label}
+                  {s.label}
                 </div>
               </div>
             ))}
@@ -241,23 +212,20 @@ export default function HeroSection() {
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
+      {/* Scroll cue */}
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        onClick={handleScroll}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[#A1A1AA] hover:text-white transition-colors group"
+        transition={{ delay: 2.2, duration: 1 }}
+        onClick={() => handleScroll('portfolio')}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-[#444] hover:text-[#A1A1AA] transition-colors"
         aria-label="Rolar para baixo"
       >
-        <span className="text-[10px] tracking-[0.2em] uppercase" style={{ fontFamily: 'var(--font-inter)' }}>
-          Scroll
+        <span className="text-[9px] tracking-[0.25em] uppercase" style={{ fontFamily: 'var(--font-inter)' }}>
+          scroll
         </span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <ChevronDown size={18} />
+        <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
+          <ChevronDown size={16} />
         </motion.div>
       </motion.button>
     </section>

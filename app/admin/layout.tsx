@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Área Administrativa | Lucas Oliveira',
+  title: 'Área Administrativa | Mixael Sevla',
   robots: { index: false, follow: false },
 }
 

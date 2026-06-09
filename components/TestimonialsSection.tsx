@@ -11,7 +11,7 @@ const TESTIMONIALS = [
     name: 'Isabela & Rafael Mendes',
     role: 'Casamento — Junho 2024',
     photo: 'https://randomuser.me/api/portraits/women/44.jpg',
-    comment: 'O Lucas superou todas as nossas expectativas! Cada foto do nosso casamento conta uma história linda. A sensibilidade dele em capturar os momentos espontâneos é incrível. Com certeza o melhor investimento do nosso dia.',
+    comment: 'O Mixael superou todas as nossas expectativas! Cada foto do nosso casamento conta uma história linda. A sensibilidade dele em capturar os momentos espontâneos é incrível. Com certeza o melhor investimento do nosso dia.',
     rating: 5,
   },
   {
@@ -19,7 +19,7 @@ const TESTIMONIALS = [
     name: 'Marina Costa',
     role: 'Ensaio de Gestante',
     photo: 'https://randomuser.me/api/portraits/women/68.jpg',
-    comment: 'Fiz meu ensaio de gestante com o Lucas e não tenho palavras para descrever o resultado. Ele me deixou completamente à vontade e as fotos ficaram de tirar o fôlego. São memórias que vou guardar para sempre.',
+    comment: 'Fiz meu ensaio de gestante com o Mixael e não tenho palavras para descrever o resultado. Ele me deixou completamente à vontade e as fotos ficaram de tirar o fôlego. São memórias que vou guardar para sempre.',
     rating: 5,
   },
   {
@@ -27,7 +27,7 @@ const TESTIMONIALS = [
     name: 'Carlos Eduardo Nunes',
     role: 'Diretor de Marketing — Vivo',
     photo: 'https://randomuser.me/api/portraits/men/32.jpg',
-    comment: 'Trabalhamos com o Lucas em nossa campanha corporativa e o resultado foi absolutamente profissional. Entrega pontual, comunicação excelente e imagens que trouxeram nossa marca à vida de um jeito que nunca conseguimos antes.',
+    comment: 'Trabalhamos com o Mixael em nossa campanha corporativa e o resultado foi absolutamente profissional. Entrega pontual, comunicação excelente e imagens que trouxeram nossa marca à vida de um jeito que nunca conseguimos antes.',
     rating: 5,
   },
   {
@@ -35,7 +35,7 @@ const TESTIMONIALS = [
     name: 'Ana Paula Ferreira',
     role: 'CEO — Restaurante Alma',
     photo: 'https://randomuser.me/api/portraits/women/26.jpg',
-    comment: 'Os reels que o Lucas produziu para o restaurante aumentaram nosso engajamento em mais de 300%! O olhar criativo dele é único. Cada vídeo parece um mini-filme. Recomendo sem hesitar.',
+    comment: 'Os reels que o Mixael produziu para o restaurante aumentaram nosso engajamento em mais de 300%! O olhar criativo dele é único. Cada vídeo parece um mini-filme. Recomendo sem hesitar.',
     rating: 5,
   },
   {
@@ -43,7 +43,7 @@ const TESTIMONIALS = [
     name: 'Rodrigo & Beatriz Santos',
     role: 'Casamento — Novembro 2024',
     photo: 'https://randomuser.me/api/portraits/men/76.jpg',
-    comment: 'Que profissional incrível! O Lucas captou absolutamente tudo. A equipe dele foi discreta, criativa e entregou um álbum e filme que nos emocionam toda vez que revisitamos. Nosso dia revivido para sempre.',
+    comment: 'Que profissional incrível! O Mixael captou absolutamente tudo. A equipe dele foi discreta, criativa e entregou um álbum e filme que nos emocionam toda vez que revisitamos. Nosso dia revivido para sempre.',
     rating: 5,
   },
 ]

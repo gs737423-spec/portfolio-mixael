@@ -18,18 +18,18 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Lucas Oliveira | Fotografia & Produção Audiovisual',
+  title: 'Mixael Sevla | Fotografia & Produção Audiovisual',
   description: 'Fotografia e produção audiovisual para marcas, eventos e pessoas. Casamentos, ensaios, eventos corporativos, drone e reels.',
   keywords: ['fotografia', 'videomaker', 'casamento', 'eventos', 'drone', 'São Paulo', 'reels', 'produção audiovisual'],
   openGraph: {
-    title: 'Lucas Oliveira | Fotografia & Produção Audiovisual',
+    title: 'Mixael Sevla | Fotografia & Produção Audiovisual',
     description: 'Transformando momentos em histórias inesquecíveis.',
     type: 'website',
     locale: 'pt_BR',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lucas Oliveira | Fotografia & Produção Audiovisual',
+    title: 'Mixael Sevla | Fotografia & Produção Audiovisual',
   },
   robots: {
     index: true,

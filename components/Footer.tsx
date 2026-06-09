@@ -14,15 +14,31 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Logo */}
-          <div className="flex flex-col items-center md:items-start">
+          <div className="flex flex-col items-center md:items-start gap-0.5">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-bold"
+                style={{ background: 'linear-gradient(135deg,#8B5CF6,#A855F7)', fontFamily: 'var(--font-space-grotesk)' }}
+              >
+                MS
+              </div>
+              <div className="flex items-baseline gap-1.5">
+                <span
+                  className="text-[#A1A1AA]"
+                  style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 300, fontSize: '11px', letterSpacing: '0.22em', textTransform: 'uppercase' }}
+                >
+                  Mixael
+                </span>
+                <span
+                  className="text-white"
+                  style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800, fontSize: '16px', letterSpacing: '-0.02em' }}
+                >
+                  Sevla
+                </span>
+              </div>
+            </div>
             <span
-              className="font-display font-800 text-xl tracking-tight text-white"
-              style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
-            >
-              LUCAS OLIVEIRA
-            </span>
-            <span
-              className="text-[10px] text-[#A1A1AA] tracking-[0.3em] uppercase mt-1"
+              className="text-[#444] text-[10px] tracking-[0.22em] uppercase"
               style={{ fontFamily: 'var(--font-inter)' }}
             >
               Fotografia & Produção Audiovisual
@@ -54,7 +70,7 @@ export default function Footer() {
             className="text-[#555] text-xs text-center md:text-right"
             style={{ fontFamily: 'var(--font-inter)' }}
           >
-            © {year} Lucas Oliveira. Todos os direitos reservados.
+            © {year} Mixael Sevla. Todos os direitos reservados.
             <br />
             <Link href="/admin" className="text-[#333] hover:text-[#8B5CF6] transition-colors">
               Área restrita

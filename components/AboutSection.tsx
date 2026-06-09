@@ -59,7 +59,7 @@ export default function AboutSection() {
             <div className="relative aspect-[4/5] rounded-2xl overflow-hidden">
               <Image
                 src="https://images.unsplash.com/photo-1576602976047-174e57a47881?w=800&q=80"
-                alt="Lucas Oliveira — Fotógrafo e Videomaker"
+                alt="Mixael Sevla — Fotógrafo e Videomaker"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -128,7 +128,7 @@ export default function AboutSection() {
               className="text-[#A1A1AA] leading-relaxed"
               style={{ fontFamily: 'var(--font-inter)' }}
             >
-              Sou Lucas Oliveira, fotógrafo e videomaker apaixonado por capturar a essência dos momentos.
+              Sou Mixael Sevla, fotógrafo e videomaker apaixonado por capturar a essência dos momentos.
               Com mais de 8 anos de experiência, me especializei em transformar visões criativas em narrativas
               visuais poderosas — de casamentos íntimos a grandes produções corporativas.
             </motion.p>

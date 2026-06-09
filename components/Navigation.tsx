@@ -30,15 +30,12 @@ export default function Navigation() {
   const handleNav = (href: string) => {
     setMobileOpen(false)
     const id = href.replace('#', '')
-    const el = document.getElementById(id)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
     <>
-      {/* Scroll Progress */}
+      {/* Scroll Progress bar */}
       <div
         className="scroll-progress"
         style={{ width: `${scrollProgress}%` }}
@@ -46,88 +43,119 @@ export default function Navigation() {
       />
 
       <motion.header
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className={`fixed top-0 left-0 right-0 z-[9990] transition-all duration-500 ${
           scrolled
-            ? 'glass-dark border-b border-[rgba(139,92,246,0.15)] py-3'
-            : 'py-6'
+            ? 'glass-dark border-b border-[rgba(139,92,246,0.12)] py-3'
+            : 'py-5'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="relative group flex flex-col leading-none">
-            <span
-              className="font-display font-800 text-xl tracking-tight text-white"
-              style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-8">
+
+          {/* ── Logo — Mixael Sevla ── */}
+          <Link href="/" className="relative group flex-shrink-0 flex items-center gap-2.5">
+            {/* Monogram */}
+            <div
+              className="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0"
+              style={{
+                background: 'linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%)',
+                boxShadow: '0 0 12px rgba(139,92,246,0.4)',
+              }}
             >
-              LUCAS
-            </span>
-            <span
-              className="font-display text-[10px] font-500 tracking-[0.3em] uppercase gradient-text"
-              style={{ fontFamily: 'var(--font-space-grotesk)' }}
-            >
-              OLIVEIRA
-            </span>
-            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-gradient-to-r from-[#8B5CF6] to-[#C084FC] group-hover:w-full transition-all duration-300" />
+              <span
+                className="text-white text-xs font-bold leading-none"
+                style={{ fontFamily: 'var(--font-space-grotesk)', letterSpacing: '-0.02em' }}
+              >
+                MS
+              </span>
+            </div>
+
+            {/* Name */}
+            <div className="flex flex-col leading-none">
+              <span
+                className="text-[#A1A1AA] group-hover:text-[#C084FC] transition-colors duration-300"
+                style={{
+                  fontFamily: 'var(--font-space-grotesk)',
+                  fontWeight: 300,
+                  fontSize: '10px',
+                  letterSpacing: '0.28em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Mixael
+              </span>
+              <span
+                className="text-white group-hover:text-[#C084FC] transition-colors duration-300"
+                style={{
+                  fontFamily: 'var(--font-space-grotesk)',
+                  fontWeight: 800,
+                  fontSize: '15px',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.1,
+                }}
+              >
+                Sevla
+              </span>
+            </div>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* ── Desktop Nav ── */}
+          <nav className="hidden md:flex items-center gap-8 flex-1 justify-center">
             {navLinks.map((link) => (
               <button
                 key={link.href}
                 onClick={() => handleNav(link.href)}
-                className="relative text-sm font-body text-[#A1A1AA] hover:text-white transition-colors duration-300 group"
-                style={{ fontFamily: 'var(--font-inter)' }}
+                className="relative text-sm text-[#A1A1AA] hover:text-white transition-colors duration-300 group"
+                style={{ fontFamily: 'var(--font-inter)', fontWeight: 400 }}
               >
                 {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#8B5CF6] group-hover:w-full transition-all duration-300" />
+                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#8B5CF6] group-hover:w-full transition-all duration-300" />
               </button>
             ))}
           </nav>
 
-          {/* CTA */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* ── CTA ── */}
+          <div className="hidden md:block flex-shrink-0">
             <button
               onClick={() => handleNav('#contato')}
-              className="btn-primary text-xs py-3 px-6"
+              className="btn-primary py-2.5 px-5 text-[11px]"
             >
               Solicitar Orçamento
             </button>
           </div>
 
-          {/* Mobile Toggle */}
+          {/* ── Mobile toggle ── */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2 text-[#A1A1AA] hover:text-white transition-colors"
             aria-label="Menu"
           >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* ── Mobile Menu ── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-[9980] glass-dark pt-24 px-6"
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.22 }}
+            className="fixed inset-0 z-[9980] glass-dark pt-20 px-8 flex flex-col"
           >
-            <nav className="flex flex-col gap-6">
+            <nav className="flex flex-col gap-7 mt-4">
               {navLinks.map((link, i) => (
                 <motion.button
                   key={link.href}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.08 }}
+                  transition={{ delay: i * 0.07 }}
                   onClick={() => handleNav(link.href)}
-                  className="text-2xl font-display font-600 text-white text-left hover:text-[#A855F7] transition-colors"
+                  className="text-3xl font-display font-bold text-white text-left hover:text-[#A855F7] transition-colors tracking-tight"
                   style={{ fontFamily: 'var(--font-space-grotesk)' }}
                 >
                   {link.label}
@@ -136,7 +164,7 @@ export default function Navigation() {
               <motion.button
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: navLinks.length * 0.08 }}
+                transition={{ delay: navLinks.length * 0.07 }}
                 onClick={() => handleNav('#contato')}
                 className="btn-primary mt-4 w-full justify-center"
               >

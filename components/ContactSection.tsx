@@ -22,7 +22,7 @@ export default function ContactSection() {
     // Abre WhatsApp com a mensagem preenchida como fallback confiável
     // (substitua pela sua integração de e-mail preferida: Resend, EmailJS, Formspree, etc.)
     const text = encodeURIComponent(
-      `Olá Lucas! Sou ${data.name}.\n\nTelefone: ${data.phone}\nE-mail: ${data.email}\n\n${data.message}`
+      `Olá Mixael! Sou ${data.name}.\n\nTelefone: ${data.phone}\nE-mail: ${data.email}\n\n${data.message}`
     )
     const url = `https://wa.me/5511999990000?text=${text}`
     window.open(url, '_blank')

@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
             className="text-[#A1A1AA] text-sm mt-1"
             style={{ fontFamily: 'var(--font-inter)' }}
           >
-            Lucas Oliveira — Fotografia
+            Mixael Sevla — Fotografia
           </p>
         </div>
 
