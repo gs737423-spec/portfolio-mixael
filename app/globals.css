@@ -211,10 +211,10 @@ body {
 
 /* === SECTION LABEL === */
 .section-label {
-  font-family: var(--font-display);
-  font-size: 11px;
+  font-family: var(--font-inter);
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-primary);
   display: flex;
@@ -224,7 +224,7 @@ body {
 .section-label::before {
   content: '';
   display: inline-block;
-  width: 32px;
+  width: 28px;
   height: 1px;
   background: var(--color-primary);
   box-shadow: 0 0 8px var(--color-primary);
@@ -234,9 +234,9 @@ body {
 .section-title {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 5vw, 3.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 
 /* === DIVIDER === */

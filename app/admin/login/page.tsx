@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { Eye, EyeOff, Lock, Mail, Camera } from 'lucide-react'
@@ -133,12 +134,18 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <p
-          className="text-center text-[#333] text-xs mt-6"
-          style={{ fontFamily: 'var(--font-inter)' }}
-        >
-          Acesso restrito ao administrador
-        </p>
+        <div className="flex flex-col items-center gap-2 mt-6">
+          <Link
+            href="/admin/recuperar-senha"
+            className="text-[#555] text-xs hover:text-[#A1A1AA] transition-colors"
+            style={{ fontFamily: 'var(--font-inter)' }}
+          >
+            Esqueci minha senha
+          </Link>
+          <p className="text-[#333] text-xs" style={{ fontFamily: 'var(--font-inter)' }}>
+            Acesso restrito ao administrador
+          </p>
+        </div>
       </div>
     </div>
   )

@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import {
-  ArrowLeft, Upload, X, Plus, Camera, Image as ImageIcon,
+  ArrowLeft, Upload, X, Plus, Image as ImageIcon,
   Youtube, FileText, Tag, Calendar, Eye
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -112,14 +112,11 @@ export default function NovoProjetoPage() {
   return (
     <div className="min-h-screen bg-[#080808]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#080808]/95 backdrop-blur-xl border-b border-[rgba(139,92,246,0.1)]">
+      <div className="bg-[#080808]/95 backdrop-blur-xl border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center gap-4">
           <Link href="/admin" className="text-[#A1A1AA] hover:text-white transition-colors">
             <ArrowLeft size={20} />
           </Link>
-          <div className="flex items-center gap-2 w-8 h-8 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#A855F7] justify-center">
-            <Camera size={16} color="white" />
-          </div>
           <h1
             className="font-display font-700 text-white text-base"
             style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
@@ -159,7 +156,7 @@ export default function NovoProjetoPage() {
             ))}
           </div>
         </div>
-      </header>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="max-w-2xl mx-auto px-6 py-8">

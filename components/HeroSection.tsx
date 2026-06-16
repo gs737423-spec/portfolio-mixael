@@ -3,10 +3,18 @@
 import { useRef, useEffect } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ChevronDown, Play } from 'lucide-react'
+import type { SiteSettings } from '@/lib/types'
+import { DEFAULT_SETTINGS } from '@/lib/types'
 
-const WORDS = ['momentos', 'histórias', 'emoções', 'memórias']
+const WORDS = ['momentos', 'emoções', 'memórias', 'sonhos']
 
-export default function HeroSection() {
+export default function HeroSection({ settings }: { settings?: SiteSettings }) {
+  const s = settings ?? DEFAULT_SETTINGS
+  const stats = [
+    { value: s.hero_stat1_value, label: s.hero_stat1_label },
+    { value: s.hero_stat2_value, label: s.hero_stat2_label },
+    { value: s.hero_stat3_value, label: s.hero_stat3_label },
+  ]
   const containerRef = useRef<HTMLDivElement>(null)
   const wordRef = useRef<HTMLSpanElement>(null)
 
@@ -168,8 +176,8 @@ export default function HeroSection() {
             className="text-[#A1A1AA] text-base md:text-lg max-w-lg leading-relaxed"
             style={{ fontFamily: 'var(--font-inter)', fontWeight: 300 }}
           >
-            Fotografia e produção audiovisual para marcas, eventos e pessoas.
-            <span className="block text-[#555] text-sm mt-1">São Paulo, Brasil</span>
+            {s.hero_subtitle}
+            <span className="block text-[#555] text-sm mt-1">{s.hero_location}</span>
           </motion.p>
 
           {/* CTAs */}
@@ -188,23 +196,19 @@ export default function HeroSection() {
             variants={itemVariants}
             className="flex items-center gap-10 pt-8 mt-2 border-t border-[rgba(139,92,246,0.12)]"
           >
-            {[
-              { value: '500+', label: 'Projetos' },
-              { value: '8+', label: 'Anos' },
-              { value: '300+', label: 'Clientes' },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
+            {stats.map((st) => (
+              <div key={st.label} className="text-center">
                 <div
                   className="gradient-text font-display font-extrabold text-2xl leading-none"
                   style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
                 >
-                  {s.value}
+                  {st.value}
                 </div>
                 <div
                   className="text-[10px] text-[#555] mt-1.5 tracking-[0.18em] uppercase"
                   style={{ fontFamily: 'var(--font-inter)' }}
                 >
-                  {s.label}
+                  {st.label}
                 </div>
               </div>
             ))}

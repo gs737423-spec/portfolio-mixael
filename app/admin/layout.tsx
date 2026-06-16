@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import AdminSidebar from '@/components/AdminSidebar'
 
 export const metadata: Metadata = {
   title: 'Área Administrativa | Mixael Sevla',
@@ -6,9 +7,5 @@ export const metadata: Metadata = {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen bg-[#080808]">
-      {children}
-    </div>
-  )
+  return <AdminSidebar>{children}</AdminSidebar>
 }

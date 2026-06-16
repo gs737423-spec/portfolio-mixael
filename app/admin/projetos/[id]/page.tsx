@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { ArrowLeft, Upload, X, Plus, Camera, Save, Loader2 } from 'lucide-react'
+import { ArrowLeft, Upload, X, Plus, Save, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { AdminProjectForm, Project } from '@/lib/types'
 import { CATEGORIES } from '@/lib/types'
@@ -126,14 +126,11 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
   return (
     <div className="min-h-screen bg-[#080808]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#080808]/95 backdrop-blur-xl border-b border-[rgba(139,92,246,0.1)]">
+      <div className="bg-[#080808]/95 backdrop-blur-xl border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center gap-4">
           <Link href="/admin" className="text-[#A1A1AA] hover:text-white transition-colors">
             <ArrowLeft size={20} />
           </Link>
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#A855F7]">
-            <Camera size={16} color="white" />
-          </div>
           <h1
             className="font-display font-700 text-white text-base flex-1 truncate"
             style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
@@ -141,7 +138,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
             Editar: {project?.title}
           </h1>
         </div>
-      </header>
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="max-w-2xl mx-auto px-6 py-8 flex flex-col gap-5">

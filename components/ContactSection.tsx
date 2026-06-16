@@ -4,10 +4,23 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { Send, Instagram, Mail, MessageCircle, Phone } from 'lucide-react'
-import type { ContactFormData } from '@/lib/types'
+import { Send, Instagram, Mail, MessageCircle } from 'lucide-react'
+import type { ContactFormData, SiteSettings } from '@/lib/types'
+import { DEFAULT_SETTINGS } from '@/lib/types'
+import { supabase } from '@/lib/supabase'
 
-export default function ContactSection() {
+const SERVICE_TYPES = [
+  'Casamento',
+  'Ensaio Fotográfico',
+  'Evento Corporativo',
+  'Drone / Aéreo',
+  'Reels / Social Media',
+  'Produção Audiovisual',
+  'Outro',
+]
+
+export default function ContactSection({ settings }: { settings?: SiteSettings }) {
+  const s = settings ?? DEFAULT_SETTINGS
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
@@ -19,20 +32,28 @@ export default function ContactSection() {
   } = useForm<ContactFormData>()
 
   const onSubmit = async (data: ContactFormData) => {
-    // Abre WhatsApp com a mensagem preenchida como fallback confiável
-    // (substitua pela sua integração de e-mail preferida: Resend, EmailJS, Formspree, etc.)
-    const text = encodeURIComponent(
-      `Olá Mixael! Sou ${data.name}.\n\nTelefone: ${data.phone}\nE-mail: ${data.email}\n\n${data.message}`
-    )
-    const url = `https://wa.me/5511999990000?text=${text}`
-    window.open(url, '_blank')
-    toast.success('Redirecionando para o WhatsApp!')
-    reset()
-  }
+    try {
+      // Salva no banco para aparecer no painel admin
+      await supabase.from('contact_submissions').insert({
+        name: data.name,
+        phone: data.phone,
+        whatsapp: data.whatsapp,
+        email: data.email,
+        service_type: data.service_type,
+        message: data.message,
+      })
+    } catch {
+      // Silently continue even if DB fails — still open WhatsApp
+    }
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+    const serviceText = data.service_type ? `\nServiço: ${data.service_type}` : ''
+    const text = encodeURIComponent(
+      `Olá! Sou ${data.name}.${serviceText}\n\nTelefone: ${data.phone}\nWhatsApp: ${data.whatsapp}\nE-mail: ${data.email}\n\n${data.message}`
+    )
+    const url = `https://wa.me/${s.whatsapp}?text=${text}`
+    window.open(url, '_blank')
+    toast.success('Mensagem enviada! Redirecionando para o WhatsApp...')
+    reset()
   }
 
   return (
@@ -80,22 +101,22 @@ export default function ContactSection() {
                 {
                   icon: MessageCircle,
                   label: 'WhatsApp',
-                  value: '+55 (11) 99999-0000',
-                  href: 'https://wa.me/5511999990000',
+                  value: `+${s.whatsapp}`,
+                  href: `https://wa.me/${s.whatsapp}`,
                   color: '#25D366',
                 },
                 {
                   icon: Mail,
                   label: 'E-mail',
-                  value: 'contato@lucasoliveira.com',
-                  href: 'mailto:contato@lucasoliveira.com',
+                  value: s.email,
+                  href: `mailto:${s.email}`,
                   color: '#8B5CF6',
                 },
                 {
                   icon: Instagram,
                   label: 'Instagram',
-                  value: '@lucasoliveira.foto',
-                  href: 'https://instagram.com/lucasoliveira.foto',
+                  value: s.instagram_handle,
+                  href: s.instagram_url,
                   color: '#E1306C',
                 },
               ].map(({ icon: Icon, label, value, href, color }) => (
@@ -152,11 +173,9 @@ export default function ContactSection() {
               onSubmit={handleSubmit(onSubmit)}
               className="glass rounded-2xl p-8 border border-[rgba(139,92,246,0.15)] flex flex-col gap-5"
             >
+              {/* Nome */}
               <div>
-                <label
-                  className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2"
-                  style={{ fontFamily: 'var(--font-inter)' }}
-                >
+                <label className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2" style={{ fontFamily: 'var(--font-inter)' }}>
                   Nome completo
                 </label>
                 <input
@@ -166,19 +185,31 @@ export default function ContactSection() {
                   className="form-input"
                   autoComplete="name"
                 />
-                {errors.name && (
-                  <span className="text-red-400 text-xs mt-1 block" style={{ fontFamily: 'var(--font-inter)' }}>
-                    {errors.name.message}
-                  </span>
-                )}
+                {errors.name && <span className="text-red-400 text-xs mt-1 block">{errors.name.message}</span>}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {/* Tipo de serviço */}
+              <div>
+                <label className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2" style={{ fontFamily: 'var(--font-inter)' }}>
+                  Tipo de serviço
+                </label>
+                <select
+                  {...register('service_type', { required: 'Selecione o tipo de serviço' })}
+                  className="form-input"
+                  style={{ fontFamily: 'var(--font-inter)' }}
+                >
+                  <option value="">Selecione...</option>
+                  {SERVICE_TYPES.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+                {errors.service_type && <span className="text-red-400 text-xs mt-1 block">{errors.service_type.message}</span>}
+              </div>
+
+              {/* Telefone + WhatsApp */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label
-                    className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2"
-                    style={{ fontFamily: 'var(--font-inter)' }}
-                  >
+                  <label className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2" style={{ fontFamily: 'var(--font-inter)' }}>
                     Telefone
                   </label>
                   <input
@@ -188,61 +219,58 @@ export default function ContactSection() {
                     className="form-input"
                     autoComplete="tel"
                   />
-                  {errors.phone && (
-                    <span className="text-red-400 text-xs mt-1 block" style={{ fontFamily: 'var(--font-inter)' }}>
-                      {errors.phone.message}
-                    </span>
-                  )}
+                  {errors.phone && <span className="text-red-400 text-xs mt-1 block">{errors.phone.message}</span>}
                 </div>
                 <div>
-                  <label
-                    className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2"
-                    style={{ fontFamily: 'var(--font-inter)' }}
-                  >
-                    E-mail
+                  <label className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2" style={{ fontFamily: 'var(--font-inter)' }}>
+                    WhatsApp
                   </label>
                   <input
-                    {...register('email', {
-                      required: 'Informe seu e-mail',
-                      pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido' },
-                    })}
-                    type="email"
-                    placeholder="seu@email.com"
+                    {...register('whatsapp')}
+                    type="tel"
+                    placeholder="(11) 99999-0000"
                     className="form-input"
-                    autoComplete="email"
+                    autoComplete="tel"
                   />
-                  {errors.email && (
-                    <span className="text-red-400 text-xs mt-1 block" style={{ fontFamily: 'var(--font-inter)' }}>
-                      {errors.email.message}
-                    </span>
-                  )}
                 </div>
               </div>
 
+              {/* E-mail */}
               <div>
-                <label
-                  className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2"
-                  style={{ fontFamily: 'var(--font-inter)' }}
-                >
+                <label className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2" style={{ fontFamily: 'var(--font-inter)' }}>
+                  E-mail
+                </label>
+                <input
+                  {...register('email', {
+                    required: 'Informe seu e-mail',
+                    pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'E-mail inválido' },
+                  })}
+                  type="email"
+                  placeholder="seu@email.com"
+                  className="form-input"
+                  autoComplete="email"
+                />
+                {errors.email && <span className="text-red-400 text-xs mt-1 block">{errors.email.message}</span>}
+              </div>
+
+              {/* Mensagem */}
+              <div>
+                <label className="block text-[11px] text-[#A1A1AA] uppercase tracking-wider mb-2" style={{ fontFamily: 'var(--font-inter)' }}>
                   Mensagem
                 </label>
                 <textarea
                   {...register('message', { required: 'Escreva uma mensagem' })}
                   placeholder="Conte sobre seu projeto — data, local, tipo de cobertura..."
-                  rows={5}
+                  rows={4}
                   className="form-input resize-none"
                 />
-                {errors.message && (
-                  <span className="text-red-400 text-xs mt-1 block" style={{ fontFamily: 'var(--font-inter)' }}>
-                    {errors.message.message}
-                  </span>
-                )}
+                {errors.message && <span className="text-red-400 text-xs mt-1 block">{errors.message.message}</span>}
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="btn-primary w-full justify-center mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="btn-primary w-full justify-center mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
@@ -260,10 +288,7 @@ export default function ContactSection() {
                 )}
               </button>
 
-              <p
-                className="text-center text-[11px] text-[#555]"
-                style={{ fontFamily: 'var(--font-inter)' }}
-              >
+              <p className="text-center text-[11px] text-[#555]" style={{ fontFamily: 'var(--font-inter)' }}>
                 Seus dados estão seguros. Sem spam, nunca.
               </p>
             </form>

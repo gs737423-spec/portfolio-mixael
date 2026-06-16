@@ -2,8 +2,11 @@
 
 import Link from 'next/link'
 import { Instagram, Mail, MessageCircle } from 'lucide-react'
+import type { SiteSettings } from '@/lib/types'
+import { DEFAULT_SETTINGS } from '@/lib/types'
 
-export default function Footer() {
+export default function Footer({ settings }: { settings?: SiteSettings }) {
+  const s = settings ?? DEFAULT_SETTINGS
   const year = new Date().getFullYear()
 
   return (
@@ -41,16 +44,16 @@ export default function Footer() {
               className="text-[#444] text-[10px] tracking-[0.22em] uppercase"
               style={{ fontFamily: 'var(--font-inter)' }}
             >
-              Fotografia & Produção Audiovisual
+              {s.footer_tagline}
             </span>
           </div>
 
           {/* Social Links */}
           <div className="flex items-center gap-4">
             {[
-              { href: 'https://instagram.com/lucasoliveira.foto', icon: Instagram, label: 'Instagram', color: '#E1306C' },
-              { href: 'https://wa.me/5511999990000', icon: MessageCircle, label: 'WhatsApp', color: '#25D366' },
-              { href: 'mailto:contato@lucasoliveira.com', icon: Mail, label: 'E-mail', color: '#8B5CF6' },
+              { href: s.instagram_url, icon: Instagram, label: 'Instagram' },
+              { href: `https://wa.me/${s.whatsapp}`, icon: MessageCircle, label: 'WhatsApp' },
+              { href: `mailto:${s.email}`, icon: Mail, label: 'E-mail' },
             ].map(({ href, icon: Icon, label }) => (
               <a
                 key={label}
