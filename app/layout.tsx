@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Sora, Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
-import BackgroundSceneClient from '@/components/BackgroundSceneClient'
 
 const sora = Sora({
   subsets: ['latin'],
@@ -47,11 +46,7 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${sora.variable} ${inter.variable}`}>
       <body className="lux-body text-white font-body antialiased overflow-x-hidden">
         <div className="grain-overlay" aria-hidden="true" />
-        {/* Background scene: z-index 0, content wrapper: z-index 1 */}
-        <BackgroundSceneClient />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          {children}
-        </div>
+        {children}
         <Toaster
           position="bottom-right"
           toastOptions={{

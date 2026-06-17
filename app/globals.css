@@ -55,23 +55,31 @@ body {
   color: #fff;
 }
 
-/* === LUX NOIR — BASE ESCURA (canvas assume os efeitos visuais) === */
+/* === BACKGROUND LIMPO === */
 
 .lux-body {
-  background-color: #050505;
+  background-color: #060608;
+  background-image:
+    radial-gradient(ellipse 70% 60% at 100% 0%,
+      rgba(109, 40, 217, 0.28) 0%,
+      rgba(76, 29, 149, 0.10) 55%,
+      transparent 80%
+    ),
+    radial-gradient(ellipse 60% 55% at 0% 100%,
+      rgba(91, 33, 182, 0.22) 0%,
+      rgba(109, 40, 217, 0.08) 55%,
+      transparent 80%
+    );
+  background-attachment: fixed;
 }
 
-/* === GRAIN OVERLAY === */
+@media (max-width: 768px) {
+  .lux-body { background-attachment: scroll; }
+}
+
+/* === GRAIN OVERLAY — desativado (estava criando textura irregular) === */
 .grain-overlay {
-  position: fixed;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  animation: grain 0.5s steps(2) infinite;
+  display: none;
 }
 
 /* === SCROLL PROGRESS === */
