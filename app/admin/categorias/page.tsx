@@ -92,7 +92,7 @@ export default function CategoriasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080808]">
+    <div className="min-h-screen bg-transparent">
       <div className="border-b border-[rgba(139,92,246,0.1)] bg-[#080808]/95">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>

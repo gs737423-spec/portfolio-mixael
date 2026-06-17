@@ -113,7 +113,7 @@ export default function NovoProjetoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080808]">
+    <div className="min-h-screen bg-transparent">
       {/* Header */}
       <div className="bg-[#080808]/95 backdrop-blur-xl border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center gap-4">

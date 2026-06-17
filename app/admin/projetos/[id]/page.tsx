@@ -120,14 +120,14 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080808] flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <Loader2 size={32} className="text-[#8B5CF6] animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#080808]">
+    <div className="min-h-screen bg-transparent">
       {/* Header */}
       <div className="bg-[#080808]/95 backdrop-blur-xl border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center gap-4">

@@ -62,7 +62,7 @@ export default function NovoDepoimentoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080808]">
+    <div className="min-h-screen bg-transparent">
       <div className="bg-[#080808]/95 border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-xl mx-auto px-6 py-4 flex items-center gap-4">
           <Link href="/admin/depoimentos" className="text-[#A1A1AA] hover:text-white transition-colors">

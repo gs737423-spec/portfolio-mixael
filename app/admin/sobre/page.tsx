@@ -87,14 +87,14 @@ export default function SobrePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080808] flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <Loader2 size={32} className="text-[#8B5CF6] animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#080808]">
+    <div className="min-h-screen bg-transparent">
       <div className="bg-[#080808]/95 border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-2xl mx-auto px-6 py-4">
           <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}>

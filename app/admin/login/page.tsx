@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { Eye, EyeOff, Lock, Mail, Camera } from 'lucide-react'
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 interface LoginForm {
@@ -33,29 +33,21 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#080808]">
-      {/* Background glow */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#8B5CF6] opacity-[0.05] blur-[120px]" />
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center px-4 bg-transparent">
       <div className="w-full max-w-sm relative z-10">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#A855F7] mb-4">
-            <Camera size={24} color="white" />
-          </div>
           <h1
-            className="text-xl font-800 text-white"
-            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800 }}
+            className="text-2xl text-white mb-1"
+            style={{ fontFamily: 'var(--font-sora), Sora, sans-serif', fontWeight: 700, letterSpacing: '-0.02em' }}
           >
-            Área Administrativa
+            Mixael Sevla
           </h1>
           <p
-            className="text-[#A1A1AA] text-sm mt-1"
-            style={{ fontFamily: 'var(--font-inter)' }}
+            className="text-[#444] text-xs tracking-[0.18em] uppercase"
+            style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}
           >
-            Mixael Sevla — Fotografia
+            Área Administrativa
           </p>
         </div>
 

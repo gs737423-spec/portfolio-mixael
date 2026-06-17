@@ -48,7 +48,7 @@ export default function SeoPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#080808] flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <Loader2 size={32} className="text-[#8B5CF6] animate-spin" />
       </div>
     )
@@ -77,7 +77,7 @@ export default function SeoPage() {
   )
 
   return (
-    <div className="min-h-screen bg-[#080808]">
+    <div className="min-h-screen bg-transparent">
       {/* Header */}
       <div className="border-b border-[rgba(139,92,246,0.1)] bg-[#080808]/95">
         <div className="max-w-2xl mx-auto px-6 py-4">
