@@ -48,7 +48,7 @@ export default function PortfolioSection({ projects = [], categories = [] }: { p
           className="mb-16"
         >
           <div className="section-label mb-4">Trabalhos</div>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <h2
               className="section-title"
               style={{ fontFamily: 'var(--font-manrope)' }}
@@ -56,12 +56,18 @@ export default function PortfolioSection({ projects = [], categories = [] }: { p
               Meu{' '}
               <span className="gradient-text">Portfólio</span>
             </h2>
-            <p
-              className="text-[#A1A1AA] max-w-sm leading-relaxed text-sm"
-              style={{ fontFamily: 'var(--font-inter)' }}
-            >
-              Cada projeto conta uma história única, capturada com paixão e precisão técnica.
-            </p>
+
+            {/* Tagline com destaque visual */}
+            <div className="max-w-xs flex flex-col gap-3">
+              <div className="w-8 h-px bg-gradient-to-r from-[#8B5CF6] to-transparent" />
+              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '14px', lineHeight: '1.75', color: '#71717A' }}>
+                Cada projeto conta uma{' '}
+                <span style={{ color: '#E4E4E7', fontStyle: 'italic' }}>história única</span>,
+                {' '}capturada com{' '}
+                <span style={{ color: '#C084FC' }}>paixão</span>
+                {' '}e precisão técnica.
+              </p>
+            </div>
           </div>
         </motion.div>
 
