@@ -1,5 +1,4 @@
 import Navigation from '@/components/Navigation'
-import HeroSection from '@/components/HeroSection'
 import PortfolioSection from '@/components/PortfolioSection'
 import AboutSection from '@/components/AboutSection'
 import ContactSection from '@/components/ContactSection'
@@ -8,7 +7,6 @@ import { MessageCircle } from 'lucide-react'
 import { createSupabaseServerClient } from '@/lib/supabase-server'
 import type { Project, SiteSettings, AboutContent } from '@/lib/types'
 
-// Renderização dinâmica: qualquer atualização no painel aparece imediatamente no site
 export const dynamic = 'force-dynamic'
 
 async function fetchAll() {
@@ -38,14 +36,12 @@ export default async function HomePage() {
     <>
       <Navigation />
       <main>
-        <HeroSection />
         <PortfolioSection projects={projects} />
         <AboutSection about={about ?? undefined} />
         <ContactSection settings={settings ?? undefined} />
       </main>
       <Footer settings={settings ?? undefined} />
 
-      {/* WhatsApp FAB */}
       <a
         href={`https://wa.me/${settings?.whatsapp ?? '5511999990000'}`}
         target="_blank"

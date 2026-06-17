@@ -157,7 +157,7 @@ export default function PortfolioSection({ projects }: { projects?: Project[] })
     <section
       id="portfolio"
       ref={sectionRef}
-      className="relative py-24 md:py-32 bg-[#050505]"
+      className="relative pt-28 pb-24 md:pt-32 md:pb-32 bg-[#050505]"
       aria-label="Portfólio"
     >
       {/* Background */}
