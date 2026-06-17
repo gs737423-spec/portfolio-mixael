@@ -10,7 +10,7 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative bg-[#050505] overflow-hidden">
+    <footer className="relative  overflow-hidden">
       {/* Top glow line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(139,92,246,0.35)] to-transparent" />
 

@@ -34,7 +34,7 @@ export default function AboutSection({ about }: { about?: AboutContent }) {
     <section
       id="sobre"
       ref={ref}
-      className="relative py-24 md:py-32 bg-[#0A0A0A] overflow-hidden"
+      className="relative py-24 md:py-32 bg-[rgba(5,5,5,0.45)] overflow-hidden"
       aria-label="Sobre mim"
     >
       <div className="absolute top-1/2 right-0 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#8B5CF6] opacity-[0.04] blur-[120px] pointer-events-none" />

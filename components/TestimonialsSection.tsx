@@ -41,7 +41,7 @@ export default function TestimonialsSection({ testimonials }: { testimonials?: T
     <section
       id="depoimentos"
       ref={ref}
-      className="relative py-24 md:py-32 bg-[#050505] overflow-hidden"
+      className="relative py-24 md:py-32  overflow-hidden"
       aria-label="Depoimentos"
     >
       {/* Background elements */}

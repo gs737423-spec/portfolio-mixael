@@ -51,7 +51,7 @@ export default function ContactSection({ settings }: { settings?: SiteSettings }
     <section
       id="contato"
       ref={ref}
-      className="relative py-24 md:py-32 bg-[#0A0A0A] overflow-hidden"
+      className="relative py-24 md:py-32 bg-[rgba(5,5,5,0.45)] overflow-hidden"
       aria-label="Contato"
     >
       {/* Background */}
