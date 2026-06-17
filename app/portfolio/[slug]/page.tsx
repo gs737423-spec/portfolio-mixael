@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await getProject(slug)
   if (!project) return { title: 'Projeto não encontrado' }
   return {
-    title: `${project.title} | Mixael Sevla`,
+    title: `${project.title} | Mixelsevla`,
     description: project.description ?? project.short_description ?? '',
   }
 }

@@ -73,7 +73,7 @@ export default function Navigation() {
             <Link
               href="/"
               className="relative group flex items-center gap-3 flex-shrink-0"
-              aria-label="Mixael Sevla — página inicial"
+              aria-label="Mixelsevla — página inicial"
             >
               {/* Name */}
               <div className="flex flex-col leading-none gap-0.5">
@@ -87,7 +87,7 @@ export default function Navigation() {
                     lineHeight: 1,
                   }}
                 >
-                  Mixael Sevla
+                  Mixelsevla
                 </span>
                 <span
                   className="text-[#555] group-hover:text-[#A78BFA] transition-colors duration-300"
@@ -308,7 +308,7 @@ export default function Navigation() {
                     letterSpacing: '0.05em',
                   }}
                 >
-                  © 2025 Mixael Sevla
+                  © 2025 Mixelsevla
                 </p>
               </div>
             </motion.div>

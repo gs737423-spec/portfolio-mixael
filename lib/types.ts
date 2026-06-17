@@ -89,8 +89,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
 export const DEFAULT_ABOUT: AboutContent = {
   id: 1,
   photo: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?w=800&q=80',
-  name: 'Mixael Sevla',
-  bio_paragraph1: 'Sou Mixael Sevla, fotógrafo e videomaker apaixonado por capturar a essência dos momentos. Com mais de 8 anos de experiência, me especializei em transformar visões criativas em narrativas visuais poderosas — de casamentos íntimos a grandes produções corporativas.',
+  name: 'Mixelsevla',
+  bio_paragraph1: 'Sou Mixelsevla, fotógrafo e videomaker apaixonado por capturar a essência dos momentos. Com mais de 8 anos de experiência, me especializei em transformar visões criativas em narrativas visuais poderosas — de casamentos íntimos a grandes produções corporativas.',
   bio_paragraph2: 'Meu trabalho vai além da técnica: é sobre conexão genuína com as pessoas e o profundo respeito pela singularidade de cada momento. Cada projeto recebe atenção total, do planejamento criativo à entrega final.',
   skills: ['Fotografia de Casamentos', 'Produção Audiovisual', 'Drone & Aéreo', 'Reels & Social Media', 'Eventos Corporativos', 'Documentários', 'Color Grading', 'Motion Graphics'],
   stat1_value: '500+',

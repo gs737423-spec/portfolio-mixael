@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import AdminSidebar from '@/components/AdminSidebar'
 
 export const metadata: Metadata = {
-  title: 'Área Administrativa | Mixael Sevla',
+  title: 'Área Administrativa | Mixelsevla',
   robots: { index: false, follow: false },
 }
 

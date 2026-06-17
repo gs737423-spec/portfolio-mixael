@@ -10,10 +10,10 @@ import type { SeoSettings } from '@/lib/types'
 type SeoForm = Omit<SeoSettings, 'id' | 'updated_at'>
 
 const DEFAULT_SEO: SeoForm = {
-  meta_title: 'Mixael Sevla | Fotografia & Produção Audiovisual',
+  meta_title: 'Mixelsevla | Fotografia & Produção Audiovisual',
   meta_description: 'Fotografia e produção audiovisual para marcas, eventos e pessoas. Casamentos, ensaios, eventos corporativos, drone e reels.',
   meta_keywords: 'fotografia, videomaker, casamento, eventos, drone, São Paulo, reels',
-  og_title: 'Mixael Sevla | Fotografia & Produção Audiovisual',
+  og_title: 'Mixelsevla | Fotografia & Produção Audiovisual',
   og_description: 'Transformando momentos em histórias inesquecíveis.',
   og_image: null,
 }

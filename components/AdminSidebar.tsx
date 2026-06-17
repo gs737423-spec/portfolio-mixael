@@ -53,7 +53,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
               letterSpacing: '-0.01em',
             }}
           >
-            Mixael Sevla
+            Mixelsevla
           </span>
           <span
             className="text-[#444]"
@@ -191,7 +191,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
             className="text-white text-sm"
             style={{ fontFamily: 'var(--font-sora), Sora, sans-serif', fontWeight: 600 }}
           >
-            Mixael Sevla
+            Mixelsevla
           </span>
         </div>
 
