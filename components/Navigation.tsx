@@ -114,11 +114,11 @@ export default function Navigation() {
                   style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}
                 >
                   <span
-                    className="relative z-10 text-[#888] group-hover:text-white transition-colors duration-250"
+                    className="relative z-10 text-[#A1A1AA] group-hover:text-white transition-colors duration-250"
                     style={{
-                      fontSize: '13px',
-                      fontWeight: 400,
-                      letterSpacing: '0.01em',
+                      fontSize: '13.5px',
+                      fontWeight: 450,
+                      letterSpacing: '0.02em',
                     }}
                   >
                     {link.label}
