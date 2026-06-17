@@ -38,7 +38,7 @@ export default async function HomePage() {
     <>
       <Navigation />
       <main>
-        <HeroSection settings={settings ?? undefined} />
+        <HeroSection />
         <PortfolioSection projects={projects} />
         <AboutSection about={about ?? undefined} />
         <ContactSection settings={settings ?? undefined} />
