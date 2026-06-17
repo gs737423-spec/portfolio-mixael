@@ -55,6 +55,145 @@ body {
   color: #fff;
 }
 
+/* === LUX NOIR — BACKGROUND SCENE === */
+
+/* Orb base */
+.lux-orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+/* Orb 1 — superior direito, roxo-quente */
+.lux-orb-1 {
+  width: 1100px;
+  height: 900px;
+  top: -350px;
+  right: -350px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(139, 92, 246, 0.13) 0%,
+    rgba(109, 40, 217, 0.07) 40%,
+    transparent 70%
+  );
+  filter: blur(70px);
+  animation: lux-drift-1 55s ease-in-out infinite;
+}
+
+/* Orb 2 — inferior esquerdo, violeta profundo */
+.lux-orb-2 {
+  width: 900px;
+  height: 750px;
+  bottom: -250px;
+  left: -280px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(76, 29, 149, 0.14) 0%,
+    rgba(139, 92, 246, 0.06) 45%,
+    transparent 70%
+  );
+  filter: blur(90px);
+  animation: lux-drift-2 70s ease-in-out infinite;
+}
+
+/* Orb 3 — centro, luz chave branca */
+.lux-orb-3 {
+  width: 700px;
+  height: 500px;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(220, 200, 255, 0.028) 0%,
+    transparent 65%
+  );
+  filter: blur(50px);
+  animation: lux-drift-3 40s ease-in-out infinite;
+}
+
+/* Raio de luz diagonal — fresnel de estúdio */
+.lux-ray {
+  position: absolute;
+  top: -400px;
+  right: -200px;
+  width: 900px;
+  height: 1600px;
+  background: linear-gradient(
+    158deg,
+    rgba(139, 92, 246, 0.055) 0%,
+    rgba(168, 85, 247, 0.02) 30%,
+    transparent 55%
+  );
+  filter: blur(40px);
+  transform-origin: top right;
+  animation: lux-ray-pulse 20s ease-in-out infinite;
+}
+
+/* Vinheta fotográfica */
+.lux-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 140% 100% at 50% 0%,    transparent 25%, rgba(5,5,5,0.55) 65%, rgba(5,5,5,0.92) 100%),
+    radial-gradient(ellipse 60% 100% at 0%   50%,   rgba(5,5,5,0.65) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 100% at 100% 50%,   rgba(5,5,5,0.65) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 55%  at 50% 100%,  rgba(5,5,5,0.85) 0%, transparent 60%);
+}
+
+/* Respiração central — cinema */
+.lux-breath {
+  position: absolute;
+  width: 800px;
+  height: 500px;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(139, 92, 246, 0.035) 0%,
+    transparent 65%
+  );
+  filter: blur(60px);
+  animation: lux-breathe 9s ease-in-out infinite;
+}
+
+/* Animações */
+@keyframes lux-drift-1 {
+  0%,  100% { transform: translate(0px,   0px)  scale(1);    }
+  25%        { transform: translate(-70px, 90px) scale(1.04); }
+  50%        { transform: translate(-110px,35px) scale(0.97); }
+  75%        { transform: translate(-40px,110px) scale(1.02); }
+}
+
+@keyframes lux-drift-2 {
+  0%,  100% { transform: translate(0px,   0px)   scale(1);    }
+  30%        { transform: translate(90px, -70px)  scale(1.06); }
+  60%        { transform: translate(50px, -110px) scale(0.95); }
+  80%        { transform: translate(100px,-40px)  scale(1.03); }
+}
+
+@keyframes lux-drift-3 {
+  0%,  100% { transform: translateX(-50%) scale(1);    opacity: 1;   }
+  50%        { transform: translateX(-50%) scale(1.18); opacity: 0.6; }
+}
+
+@keyframes lux-ray-pulse {
+  0%,  100% { opacity: 1;   transform: rotate(0deg)   scaleX(1);    }
+  50%        { opacity: 0.6; transform: rotate(-1.5deg) scaleX(0.96); }
+}
+
+@keyframes lux-breathe {
+  0%,  100% { opacity: 0.7; transform: translateX(-50%) scale(1);    }
+  50%        { opacity: 1;   transform: translateX(-50%) scale(1.25); }
+}
+
+/* Respeita preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  .lux-orb-1, .lux-orb-2, .lux-orb-3,
+  .lux-ray, .lux-breath { animation: none; }
+}
+
 /* === GRAIN OVERLAY === */
 .grain-overlay {
   position: fixed;
