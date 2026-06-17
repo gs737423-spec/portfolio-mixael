@@ -10,46 +10,49 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="relative bg-[#050505] border-t border-[rgba(139,92,246,0.1)]">
-      {/* Top divider glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[1px] bg-gradient-to-r from-transparent via-[rgba(139,92,246,0.4)] to-transparent" />
+    <footer className="relative bg-[#050505] overflow-hidden">
+      {/* Top glow line */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(139,92,246,0.35)] to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Logo */}
-          <div className="flex flex-col items-center md:items-start gap-0.5">
-            <div className="flex items-center gap-2">
-              <div
-                className="w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-bold"
-                style={{ background: 'linear-gradient(135deg,#8B5CF6,#A855F7)', fontFamily: 'var(--font-manrope)' }}
+      {/* Ambient orb */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-[#8B5CF6] opacity-[0.04] blur-[100px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+
+        {/* Main footer row */}
+        <div className="py-10 flex flex-col md:flex-row items-center md:items-end justify-between gap-10">
+
+          {/* Brand */}
+          <div className="flex flex-col items-center md:items-start gap-3">
+            <div className="flex flex-col gap-1">
+              <span
+                className="text-white leading-none"
+                style={{
+                  fontFamily: 'var(--font-sora), Sora, sans-serif',
+                  fontWeight: 700,
+                  fontSize: '22px',
+                  letterSpacing: '-0.02em',
+                }}
               >
-                MS
-              </div>
-              <div className="flex items-baseline gap-1.5">
-                <span
-                  className="text-[#A1A1AA]"
-                  style={{ fontFamily: 'var(--font-manrope)', fontWeight: 300, fontSize: '11px', letterSpacing: '0.22em', textTransform: 'uppercase' }}
-                >
-                  Mixael
-                </span>
-                <span
-                  className="text-white"
-                  style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800, fontSize: '16px', letterSpacing: '-0.02em' }}
-                >
-                  Sevla
-                </span>
-              </div>
+                Mixael Sevla
+              </span>
+              <span
+                className="text-[#555]"
+                style={{
+                  fontFamily: 'var(--font-inter), Inter, sans-serif',
+                  fontWeight: 400,
+                  fontSize: '11px',
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {s.footer_tagline || 'Fotografia & Produção Audiovisual'}
+              </span>
             </div>
-            <span
-              className="text-[#444] text-[10px] tracking-[0.22em] uppercase"
-              style={{ fontFamily: 'var(--font-inter)' }}
-            >
-              {s.footer_tagline}
-            </span>
           </div>
 
-          {/* Social Links */}
-          <div className="flex items-center gap-4">
+          {/* Social icons */}
+          <div className="flex items-center gap-3">
             {[
               { href: s.instagram_url, icon: Instagram, label: 'Instagram' },
               { href: `https://wa.me/${s.whatsapp}`, icon: MessageCircle, label: 'WhatsApp' },
@@ -61,23 +64,47 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="w-10 h-10 rounded-full glass border border-[rgba(139,92,246,0.15)] flex items-center justify-center text-[#A1A1AA] hover:text-[#C084FC] hover:border-[rgba(139,92,246,0.5)] hover:shadow-[0_0_16px_rgba(139,92,246,0.4)] transition-all duration-300 hover:scale-110"
+                className="w-10 h-10 rounded-xl border border-[rgba(255,255,255,0.07)] flex items-center justify-center text-[#555] hover:text-white hover:border-[rgba(139,92,246,0.4)] transition-all duration-300"
+                style={{ background: 'rgba(255,255,255,0.03)' }}
               >
-                <Icon size={16} />
+                <Icon size={15} />
               </a>
             ))}
           </div>
 
           {/* Copyright */}
           <p
-            className="text-[#555] text-xs text-center md:text-right"
-            style={{ fontFamily: 'var(--font-inter)' }}
+            className="text-[#444] text-center md:text-right"
+            style={{
+              fontFamily: 'var(--font-inter), Inter, sans-serif',
+              fontSize: '12px',
+              lineHeight: 1.7,
+            }}
           >
-            © {year} Mixael Sevla. Todos os direitos reservados.
+            © {year} Mixael Sevla.{' '}
+            <span className="text-[#333]">Todos os direitos reservados.</span>
             <br />
-            <Link href="/admin" className="text-[#333] hover:text-[#8B5CF6] transition-colors">
+            <Link
+              href="/admin"
+              className="text-[#2a2a2a] hover:text-[#8B5CF6] transition-colors duration-200"
+            >
               Área restrita
             </Link>
+          </p>
+        </div>
+
+        {/* Bottom divider */}
+        <div className="border-t border-[rgba(255,255,255,0.04)] py-4">
+          <p
+            className="text-center text-[#2a2a2a]"
+            style={{
+              fontFamily: 'var(--font-inter), Inter, sans-serif',
+              fontSize: '10px',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Feito com cuidado · São Paulo, Brasil
           </p>
         </div>
       </div>

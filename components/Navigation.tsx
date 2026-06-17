@@ -75,51 +75,31 @@ export default function Navigation() {
               className="relative group flex items-center gap-3 flex-shrink-0"
               aria-label="Mixael Sevla — página inicial"
             >
-              {/* Monogram badge */}
-              <div className="relative flex-shrink-0">
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-105"
-                  style={{
-                    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
-                    boxShadow: '0 0 0 1px rgba(139,92,246,0.4), 0 4px 20px rgba(139,92,246,0.35)',
-                  }}
-                >
-                  <span
-                    className="text-white text-[11px] font-bold tracking-tight leading-none"
-                    style={{ fontFamily: 'var(--font-sora), Sora, sans-serif', fontWeight: 700 }}
-                  >
-                    MS
-                  </span>
-                </div>
-                {/* Pulse glow on hover */}
-                <div className="absolute inset-0 rounded-lg bg-[#8B5CF6] opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-300 pointer-events-none" />
-              </div>
-
-              {/* Name stacked */}
-              <div className="flex flex-col leading-none">
+              {/* Name */}
+              <div className="flex flex-col leading-none gap-0.5">
                 <span
-                  className="text-[#888] group-hover:text-[#A78BFA] transition-colors duration-300"
-                  style={{
-                    fontFamily: 'var(--font-sora), Sora, sans-serif',
-                    fontWeight: 300,
-                    fontSize: '9px',
-                    letterSpacing: '0.32em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Mixael
-                </span>
-                <span
-                  className="text-white group-hover:text-[#C4B5FD] transition-colors duration-300 mt-0.5"
+                  className="text-white group-hover:text-[#C4B5FD] transition-colors duration-300"
                   style={{
                     fontFamily: 'var(--font-sora), Sora, sans-serif',
                     fontWeight: 700,
-                    fontSize: '14px',
-                    letterSpacing: '-0.01em',
+                    fontSize: '17px',
+                    letterSpacing: '-0.02em',
                     lineHeight: 1,
                   }}
                 >
-                  Sevla
+                  Mixael Sevla
+                </span>
+                <span
+                  className="text-[#555] group-hover:text-[#A78BFA] transition-colors duration-300"
+                  style={{
+                    fontFamily: 'var(--font-inter), Inter, sans-serif',
+                    fontWeight: 400,
+                    fontSize: '10px',
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Fotógrafo
                 </span>
               </div>
             </Link>
