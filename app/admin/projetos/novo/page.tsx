@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,8 +12,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { slugify } from '@/lib/utils'
-import type { AdminProjectForm } from '@/lib/types'
-import { CATEGORIES } from '@/lib/types'
+import type { AdminProjectForm, CategoryItem } from '@/lib/types'
 
 const STEPS = ['Informações', 'Imagens', 'Publicar']
 
@@ -25,6 +24,13 @@ export default function NovoProjetoPage() {
   const [photoFiles, setPhotoFiles] = useState<File[]>([])
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
+  const [categories, setCategories] = useState<CategoryItem[]>([])
+
+  useEffect(() => {
+    supabase.from('categories').select('*').eq('active', true).order('display_order').then(({ data }) => {
+      setCategories((data ?? []) as CategoryItem[])
+    })
+  }, [])
 
   const {
     register,
@@ -32,10 +38,7 @@ export default function NovoProjetoPage() {
     watch,
     formState: { errors },
   } = useForm<AdminProjectForm>({
-    defaultValues: {
-      category: 'Casamentos',
-      published: true,
-    },
+    defaultValues: { published: true, display_order: 0 },
   })
 
   const title = watch('title')
@@ -197,8 +200,9 @@ export default function NovoProjetoPage() {
                   {...register('category', { required: true })}
                   className="admin-input"
                 >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                  <option value="">Selecione uma categoria...</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>{cat.name}</option>
                   ))}
                 </select>
               </div>

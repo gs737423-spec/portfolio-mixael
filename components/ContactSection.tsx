@@ -9,16 +9,6 @@ import type { ContactFormData, SiteSettings } from '@/lib/types'
 import { DEFAULT_SETTINGS } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
 
-const SERVICE_TYPES = [
-  'Casamento',
-  'Ensaio Fotográfico',
-  'Evento Corporativo',
-  'Drone / Aéreo',
-  'Reels / Social Media',
-  'Produção Audiovisual',
-  'Outro',
-]
-
 export default function ContactSection({ settings }: { settings?: SiteSettings }) {
   const s = settings ?? DEFAULT_SETTINGS
   const ref = useRef<HTMLElement>(null)
@@ -47,8 +37,9 @@ export default function ContactSection({ settings }: { settings?: SiteSettings }
     }
 
     const serviceText = data.service_type ? `\nServiço: ${data.service_type}` : ''
+    const baseMsg = s.whatsapp_message || 'Olá! Vim pelo site e gostaria de solicitar um orçamento.'
     const text = encodeURIComponent(
-      `Olá! Sou ${data.name}.${serviceText}\n\nTelefone: ${data.phone}\nWhatsApp: ${data.whatsapp}\nE-mail: ${data.email}\n\n${data.message}`
+      `${baseMsg}\n\nNome: ${data.name}${serviceText}\nTelefone: ${data.phone}\nE-mail: ${data.email}\n\n${data.message}`
     )
     const url = `https://wa.me/${s.whatsapp}?text=${text}`
     window.open(url, '_blank')
@@ -81,9 +72,7 @@ export default function ContactSection({ settings }: { settings?: SiteSettings }
                 className="section-title"
                 style={{ fontFamily: 'var(--font-manrope)' }}
               >
-                Vamos criar algo{' '}
-                <span className="gradient-text">incrível</span>{' '}
-                juntos.
+                {s.contact_title || 'Vamos criar algo incrível juntos.'}
               </h2>
             </div>
 
@@ -91,8 +80,7 @@ export default function ContactSection({ settings }: { settings?: SiteSettings }
               className="text-[#A1A1AA] leading-relaxed text-base"
               style={{ fontFamily: 'var(--font-inter)' }}
             >
-              Tem um projeto em mente? Quer saber mais sobre meus serviços ou solicitar um orçamento?
-              Adoraria ouvir sobre o seu projeto e como posso ajudá-lo a contar sua história.
+              {s.contact_subtitle || 'Tem um projeto em mente? Entre em contato e vamos conversar.'}
             </p>
 
             {/* Contact info */}

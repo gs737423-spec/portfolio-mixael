@@ -2,14 +2,25 @@ export interface Project {
   id: string
   title: string
   slug: string
-  category: Category
+  category: string
   description: string | null
   short_description: string | null
   cover_image: string | null
   images: string[]
   youtube_url: string | null
   date: string | null
+  display_order: number
   published: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface CategoryItem {
+  id: string
+  name: string
+  slug: string
+  display_order: number
+  active: boolean
   created_at: string
   updated_at: string
 }
@@ -24,39 +35,18 @@ export interface Testimonial {
   created_at: string
 }
 
-export type Category =
-  | 'Casamentos'
-  | 'Ensaios'
-  | 'Eventos'
-  | 'Corporativo'
-  | 'Drone'
-  | 'Reels'
-  | 'Produções Audiovisuais'
-
-export const CATEGORIES: Category[] = [
-  'Casamentos',
-  'Ensaios',
-  'Eventos',
-  'Corporativo',
-  'Drone',
-  'Reels',
-  'Produções Audiovisuais',
-]
-
 export interface SiteSettings {
   id: number
   whatsapp: string
+  phone: string
   email: string
   instagram_handle: string
   instagram_url: string
-  hero_subtitle: string
-  hero_location: string
-  hero_stat1_value: string
-  hero_stat1_label: string
-  hero_stat2_value: string
-  hero_stat2_label: string
-  hero_stat3_value: string
-  hero_stat3_label: string
+  facebook_url: string
+  tiktok_url: string
+  contact_title: string
+  contact_subtitle: string
+  whatsapp_message: string
   footer_tagline: string
   updated_at: string
 }
@@ -83,17 +73,15 @@ export interface AboutContent {
 export const DEFAULT_SETTINGS: SiteSettings = {
   id: 1,
   whatsapp: '5511999990000',
+  phone: '',
   email: 'contato@mixaelsevla.com',
   instagram_handle: '@mixaelsevla.foto',
   instagram_url: 'https://instagram.com/mixaelsevla.foto',
-  hero_subtitle: 'Fotografia e produção audiovisual para marcas, eventos e pessoas.',
-  hero_location: 'São Paulo, Brasil',
-  hero_stat1_value: '500+',
-  hero_stat1_label: 'Projetos',
-  hero_stat2_value: '8+',
-  hero_stat2_label: 'Anos',
-  hero_stat3_value: '300+',
-  hero_stat3_label: 'Clientes',
+  facebook_url: '',
+  tiktok_url: '',
+  contact_title: 'Vamos criar algo incrível juntos.',
+  contact_subtitle: 'Tem um projeto em mente? Entre em contato e vamos conversar.',
+  whatsapp_message: 'Olá! Vim pelo site e gostaria de solicitar um orçamento.',
   footer_tagline: 'Fotografia & Produção Audiovisual',
   updated_at: '',
 }
@@ -161,10 +149,11 @@ export interface MediaFile {
 
 export interface AdminProjectForm {
   title: string
-  category: Category
+  category: string
   description: string
   short_description: string
   youtube_url: string
   date: string
+  display_order: number
   published: boolean
 }

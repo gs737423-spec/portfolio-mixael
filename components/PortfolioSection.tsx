@@ -7,151 +7,27 @@ import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight, ExternalLink } from 'lucide-react'
-import type { Project, Category } from '@/lib/types'
-import { CATEGORIES } from '@/lib/types'
-
-const DEMO_PROJECTS: Project[] = [
-  {
-    id: '1',
-    title: 'Casamento Isabela & Rafael',
-    slug: 'casamento-isabela-rafael',
-    category: 'Casamentos',
-    description: 'Uma cerimônia ao pôr do sol repleta de emoção e beleza. Cada detalhe capturado com sensibilidade.',
-    short_description: 'Cerimônia ao pôr do sol com 450 convidados',
-    cover_image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80',
-    images: [],
-    youtube_url: null,
-    date: '2024-06-15',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-  {
-    id: '2',
-    title: 'Ensaio Ana Clara',
-    slug: 'ensaio-ana-clara',
-    category: 'Ensaios',
-    description: 'Ensaio urbano com luz natural. Personalidade e autenticidade em cada frame.',
-    short_description: 'Ensaio urbano com luz natural',
-    cover_image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&q=80',
-    images: [],
-    youtube_url: null,
-    date: '2024-08-20',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-  {
-    id: '3',
-    title: 'Evento Tech Summit 2024',
-    slug: 'tech-summit-2024',
-    category: 'Eventos',
-    description: 'Cobertura completa do maior evento de tecnologia do Brasil.',
-    short_description: 'Cobertura do maior evento tech do Brasil',
-    cover_image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&q=80',
-    images: [],
-    youtube_url: null,
-    date: '2024-09-10',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-  {
-    id: '4',
-    title: 'Campanha Corporativa Vivo',
-    slug: 'campanha-corporativa-vivo',
-    category: 'Corporativo',
-    description: 'Produção visual completa para a campanha anual da Vivo Telecom.',
-    short_description: 'Campanha visual para grande corporação',
-    cover_image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&q=80',
-    images: [],
-    youtube_url: null,
-    date: '2024-07-05',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-  {
-    id: '5',
-    title: 'Litoral de Ilhabela — Drone',
-    slug: 'litoral-ilhabela-drone',
-    category: 'Drone',
-    description: 'Imagens aéreas deslumbrantes do litoral de Ilhabela, capturando a imensidão do oceano.',
-    short_description: 'Imagens aéreas do litoral paulista',
-    cover_image: 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=900&q=80',
-    images: [],
-    youtube_url: null,
-    date: '2024-05-30',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-  {
-    id: '6',
-    title: 'Reels Restaurante Alma',
-    slug: 'reels-restaurante-alma',
-    category: 'Reels',
-    description: 'Conteúdo de alto impacto para redes sociais. Conceito e execução completos.',
-    short_description: 'Reels e conteúdo para redes sociais',
-    cover_image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80',
-    images: [],
-    youtube_url: null,
-    date: '2024-10-01',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-  {
-    id: '7',
-    title: 'Documentário "Raízes"',
-    slug: 'documentario-raizes',
-    category: 'Produções Audiovisuais',
-    description: 'Documentário sobre as tradições culturais do interior do Brasil.',
-    short_description: 'Documentário de curta-metragem',
-    cover_image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=900&q=80',
-    images: [],
-    youtube_url: 'https://youtube.com/watch?v=dQw4w9WgXcQ',
-    date: '2024-04-20',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-  {
-    id: '8',
-    title: 'Casamento Marina & Carlos',
-    slug: 'casamento-marina-carlos',
-    category: 'Casamentos',
-    description: 'Casamento intimista em fazenda histórica com decoração romântica.',
-    short_description: 'Casamento intimista em fazenda histórica',
-    cover_image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=900&q=80',
-    images: [],
-    youtube_url: null,
-    date: '2024-11-03',
-    published: true,
-    created_at: '',
-    updated_at: '',
-  },
-]
+import type { Project, CategoryItem } from '@/lib/types'
 
 const ALL_LABEL = 'Todos'
 
-export default function PortfolioSection({ projects }: { projects?: Project[] }) {
+export default function PortfolioSection({ projects = [], categories = [] }: { projects?: Project[]; categories?: CategoryItem[] }) {
   const [activeCategory, setActiveCategory] = useState<string>(ALL_LABEL)
   const [filtered, setFiltered] = useState<Project[]>([])
-  const data = projects && projects.length > 0 ? projects : DEMO_PROJECTS
 
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
 
   useEffect(() => {
     if (activeCategory === ALL_LABEL) {
-      setFiltered(data)
+      setFiltered(projects)
     } else {
-      setFiltered(data.filter((p) => p.category === activeCategory))
+      setFiltered(projects.filter((p) => p.category === activeCategory))
     }
-  }, [activeCategory, data])
+  }, [activeCategory, projects])
 
-  const allCategories = [ALL_LABEL, ...CATEGORIES]
+  const activeCategories = categories.filter((c) => c.active)
+  const allCategories = [ALL_LABEL, ...activeCategories.map((c) => c.name)]
 
   return (
     <section

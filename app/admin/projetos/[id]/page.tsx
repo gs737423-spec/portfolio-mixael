@@ -8,8 +8,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Upload, X, Plus, Save, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import type { AdminProjectForm, Project } from '@/lib/types'
-import { CATEGORIES } from '@/lib/types'
+import type { AdminProjectForm, Project, CategoryItem } from '@/lib/types'
 
 export default function EditarProjetoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -22,6 +21,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
   const [newPhotos, setNewPhotos] = useState<File[]>([])
   const [newPhotoPreviews, setNewPhotoPreviews] = useState<string[]>([])
   const [existingImages, setExistingImages] = useState<string[]>([])
+  const [categories, setCategories] = useState<CategoryItem[]>([])
 
   const {
     register,
@@ -32,6 +32,9 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
 
   useEffect(() => {
     loadProject()
+    supabase.from('categories').select('*').eq('active', true).order('display_order').then(({ data }) => {
+      setCategories((data ?? []) as CategoryItem[])
+    })
   }, [id])
 
   const loadProject = async () => {
@@ -157,7 +160,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
                 Categoria
               </label>
               <select {...register('category')} className="admin-input">
-                {CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
+                {categories.map((cat) => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
               </select>
             </div>
             <div>
