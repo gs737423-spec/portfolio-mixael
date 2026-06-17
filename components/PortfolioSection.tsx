@@ -60,7 +60,7 @@ export default function PortfolioSection({ projects = [], categories = [] }: { p
             {/* Tagline */}
             <div className="max-w-xs flex flex-col gap-3">
               <div className="w-6 h-px" style={{ background: 'rgba(139,92,246,0.5)' }} />
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '13px', fontWeight: 400, lineHeight: '1.8', color: '#52525B', letterSpacing: '0.01em' }}>
+              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '13px', fontWeight: 400, lineHeight: '1.8', color: '#71717A', letterSpacing: '0.01em' }}>
                 Cada projeto conta uma história única, capturada com paixão e precisão técnica.
               </p>
             </div>
