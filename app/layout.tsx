@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import { Sora, Inter } from 'next/font/google'
+import dynamic from 'next/dynamic'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
+
+const BackgroundScene = dynamic(() => import('@/components/BackgroundScene'), { ssr: false })
 
 const sora = Sora({
   subsets: ['latin'],
@@ -46,7 +49,11 @@ export default function RootLayout({
     <html lang="pt-BR" className={`${sora.variable} ${inter.variable}`}>
       <body className="lux-body text-white font-body antialiased overflow-x-hidden">
         <div className="grain-overlay" aria-hidden="true" />
-        {children}
+        {/* Background scene: z-index 0, content wrapper: z-index 1 */}
+        <BackgroundScene />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {children}
+        </div>
         <Toaster
           position="bottom-right"
           toastOptions={{

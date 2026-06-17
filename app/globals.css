@@ -55,72 +55,10 @@ body {
   color: #fff;
 }
 
-/* === LUX NOIR — BACKGROUND DIRETO NO BODY === */
+/* === LUX NOIR — BASE ESCURA (canvas assume os efeitos visuais) === */
 
 .lux-body {
   background-color: #050505;
-  background-image:
-    /* Orb 1: canto superior direito — roxo quente */
-    radial-gradient(ellipse 65% 55% at 92% 6%,
-      rgba(139, 92, 246, 0.32) 0%,
-      rgba(109, 40, 217, 0.16) 45%,
-      transparent 70%
-    ),
-    /* Orb 2: canto inferior esquerdo — violeta profundo */
-    radial-gradient(ellipse 55% 50% at 6% 95%,
-      rgba(91, 33, 182, 0.28) 0%,
-      rgba(139, 92, 246, 0.12) 45%,
-      transparent 70%
-    ),
-    /* Raio diagonal: fresnel de estúdio */
-    linear-gradient(
-      155deg,
-      rgba(139, 92, 246, 0.10) 0%,
-      rgba(168, 85, 247, 0.04) 25%,
-      transparent 50%
-    ),
-    /* Luz central: ambiente geral */
-    radial-gradient(ellipse 80% 60% at 50% 40%,
-      rgba(139, 92, 246, 0.06) 0%,
-      transparent 70%
-    ),
-    /* Vinheta: borda inferior */
-    radial-gradient(ellipse 120% 50% at 50% 110%,
-      rgba(5, 5, 5, 0.9) 0%,
-      transparent 60%
-    );
-  background-attachment: fixed;
-}
-
-/* Mobile: fixed attachment causa jank no Safari — usar scroll */
-@media (max-width: 768px) {
-  .lux-body {
-    background-attachment: scroll;
-  }
-}
-
-/* Animação de respiração via pseudo-elemento */
-.lux-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 50% 40% at 50% 35%,
-      rgba(139, 92, 246, 0.07) 0%,
-      transparent 65%
-    );
-  animation: lux-breathe 10s ease-in-out infinite;
-}
-
-@keyframes lux-breathe {
-  0%,  100% { opacity: 0.6; }
-  50%        { opacity: 1.0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .lux-body::before { animation: none; }
 }
 
 /* === GRAIN OVERLAY === */
