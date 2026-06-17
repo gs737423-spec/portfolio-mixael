@@ -187,7 +187,7 @@ export default function ContactSection({ settings }: { settings?: SiteSettings }
                   style={{ fontFamily: 'var(--font-inter)' }}
                 >
                   <option value="">Selecione...</option>
-                  {SERVICE_TYPES.map((t) => (
+                  {['Casamento', 'Ensaio', 'Evento', 'Corporativo', 'Drone', 'Reels', 'Outro'].map((t) => (
                     <option key={t} value={t}>{t}</option>
                   ))}
                 </select>
