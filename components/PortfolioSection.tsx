@@ -57,15 +57,11 @@ export default function PortfolioSection({ projects = [], categories = [] }: { p
               <span className="gradient-text">Portfólio</span>
             </h2>
 
-            {/* Tagline com destaque visual */}
+            {/* Tagline */}
             <div className="max-w-xs flex flex-col gap-3">
-              <div className="w-8 h-px bg-gradient-to-r from-[#8B5CF6] to-transparent" />
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '14px', lineHeight: '1.75', color: '#71717A' }}>
-                Cada projeto conta uma{' '}
-                <span style={{ color: '#E4E4E7', fontStyle: 'italic' }}>história única</span>,
-                {' '}capturada com{' '}
-                <span style={{ color: '#C084FC' }}>paixão</span>
-                {' '}e precisão técnica.
+              <div className="w-6 h-px" style={{ background: 'rgba(139,92,246,0.5)' }} />
+              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '13px', fontWeight: 400, lineHeight: '1.8', color: '#52525B', letterSpacing: '0.01em' }}>
+                Cada projeto conta uma história única, capturada com paixão e precisão técnica.
               </p>
             </div>
           </div>
