@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, ArrowUpRight } from 'lucide-react'
 
 const navLinks = [
   { label: 'Portfólio', href: '#portfolio' },
@@ -19,7 +19,7 @@ export default function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY
-      setScrolled(y > 60)
+      setScrolled(y > 40)
       const total = document.documentElement.scrollHeight - window.innerHeight
       setScrollProgress(total > 0 ? (y / total) * 100 : 0)
     }
@@ -27,15 +27,26 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
+
   const handleNav = (href: string) => {
     setMobileOpen(false)
-    const id = href.replace('#', '')
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setTimeout(() => {
+      const id = href.replace('#', '')
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, mobileOpen ? 300 : 0)
   }
 
   return (
     <>
-      {/* Scroll Progress bar */}
+      {/* Scroll Progress */}
       <div
         className="scroll-progress"
         style={{ width: `${scrollProgress}%` }}
@@ -43,135 +54,285 @@ export default function Navigation() {
       />
 
       <motion.header
-        initial={{ y: -80, opacity: 0 }}
+        initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-[9990] transition-all duration-500 ${
-          scrolled
-            ? 'glass-dark border-b border-[rgba(139,92,246,0.12)] py-3'
-            : 'py-5'
-        }`}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-0 left-0 right-0 z-[9990]"
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between gap-8">
+        {/* Glass backdrop */}
+        <div
+          className={`transition-all duration-500 ${
+            scrolled
+              ? 'bg-[rgba(5,5,5,0.85)] backdrop-blur-2xl border-b border-[rgba(139,92,246,0.1)] shadow-[0_1px_40px_rgba(0,0,0,0.6)]'
+              : 'bg-transparent'
+          }`}
+        >
+          <div className="max-w-7xl mx-auto px-6 md:px-10 flex items-center justify-between h-16 md:h-[70px]">
 
-          {/* ── Logo — Mixael Sevla ── */}
-          <Link href="/" className="relative group flex-shrink-0 flex items-center gap-2.5">
-            {/* Monogram */}
-            <div
-              className="w-8 h-8 rounded-md flex items-center justify-center flex-shrink-0"
-              style={{
-                background: 'linear-gradient(135deg, #8B5CF6 0%, #A855F7 100%)',
-                boxShadow: '0 0 12px rgba(139,92,246,0.4)',
-              }}
+            {/* ── Logo ── */}
+            <Link
+              href="/"
+              className="relative group flex items-center gap-3 flex-shrink-0"
+              aria-label="Mixael Sevla — página inicial"
             >
-              <span
-                className="text-white text-xs font-bold leading-none"
-                style={{ fontFamily: 'var(--font-manrope)', letterSpacing: '-0.02em' }}
-              >
-                MS
-              </span>
-            </div>
+              {/* Monogram badge */}
+              <div className="relative flex-shrink-0">
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                    boxShadow: '0 0 0 1px rgba(139,92,246,0.4), 0 4px 20px rgba(139,92,246,0.35)',
+                  }}
+                >
+                  <span
+                    className="text-white text-[11px] font-bold tracking-tight leading-none"
+                    style={{ fontFamily: 'var(--font-sora), Sora, sans-serif', fontWeight: 700 }}
+                  >
+                    MS
+                  </span>
+                </div>
+                {/* Pulse glow on hover */}
+                <div className="absolute inset-0 rounded-lg bg-[#8B5CF6] opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-300 pointer-events-none" />
+              </div>
 
-            {/* Name */}
-            <div className="flex flex-col leading-none">
-              <span
-                className="text-[#A1A1AA] group-hover:text-[#C084FC] transition-colors duration-300"
+              {/* Name stacked */}
+              <div className="flex flex-col leading-none">
+                <span
+                  className="text-[#888] group-hover:text-[#A78BFA] transition-colors duration-300"
+                  style={{
+                    fontFamily: 'var(--font-sora), Sora, sans-serif',
+                    fontWeight: 300,
+                    fontSize: '9px',
+                    letterSpacing: '0.32em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Mixael
+                </span>
+                <span
+                  className="text-white group-hover:text-[#C4B5FD] transition-colors duration-300 mt-0.5"
+                  style={{
+                    fontFamily: 'var(--font-sora), Sora, sans-serif',
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1,
+                  }}
+                >
+                  Sevla
+                </span>
+              </div>
+            </Link>
+
+            {/* ── Desktop Nav ── */}
+            <nav className="hidden md:flex items-center gap-1" aria-label="Navegação principal">
+              {navLinks.map((link) => (
+                <button
+                  key={link.href}
+                  onClick={() => handleNav(link.href)}
+                  className="relative px-4 py-2.5 group cursor-pointer"
+                  style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}
+                >
+                  <span
+                    className="relative z-10 text-[#888] group-hover:text-white transition-colors duration-250"
+                    style={{
+                      fontSize: '13px',
+                      fontWeight: 400,
+                      letterSpacing: '0.01em',
+                    }}
+                  >
+                    {link.label}
+                  </span>
+                  {/* Hover pill */}
+                  <span className="absolute inset-0 rounded-md bg-white/0 group-hover:bg-white/[0.05] transition-colors duration-250" />
+                  {/* Underline */}
+                  <span className="absolute bottom-1.5 left-4 right-4 h-px bg-[#8B5CF6] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                </button>
+              ))}
+            </nav>
+
+            {/* ── CTA + Mobile toggle ── */}
+            <div className="flex items-center gap-3">
+              {/* CTA — desktop */}
+              <button
+                onClick={() => handleNav('#contato')}
+                className="hidden md:flex items-center gap-1.5 group cursor-pointer"
                 style={{
-                  fontFamily: 'var(--font-manrope)',
-                  fontWeight: 300,
-                  fontSize: '10px',
-                  letterSpacing: '0.28em',
+                  padding: '9px 18px',
+                  border: '1px solid rgba(139,92,246,0.45)',
+                  borderRadius: '6px',
+                  background: 'rgba(139,92,246,0.06)',
+                  transition: 'all 0.25s ease',
+                  fontFamily: 'var(--font-sora), Sora, sans-serif',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  letterSpacing: '0.04em',
+                  color: '#C4B5FD',
                   textTransform: 'uppercase',
                 }}
-              >
-                Mixael
-              </span>
-              <span
-                className="text-white group-hover:text-[#C084FC] transition-colors duration-300"
-                style={{
-                  fontFamily: 'var(--font-manrope)',
-                  fontWeight: 800,
-                  fontSize: '15px',
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.1,
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget
+                  el.style.background = 'rgba(139,92,246,0.18)'
+                  el.style.borderColor = 'rgba(139,92,246,0.7)'
+                  el.style.color = '#fff'
+                  el.style.boxShadow = '0 0 20px rgba(139,92,246,0.25)'
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget
+                  el.style.background = 'rgba(139,92,246,0.06)'
+                  el.style.borderColor = 'rgba(139,92,246,0.45)'
+                  el.style.color = '#C4B5FD'
+                  el.style.boxShadow = 'none'
                 }}
               >
-                Sevla
-              </span>
-            </div>
-          </Link>
-
-          {/* ── Desktop Nav ── */}
-          <nav className="hidden md:flex items-center gap-8 flex-1 justify-center">
-            {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => handleNav(link.href)}
-                className="relative text-sm text-[#A1A1AA] hover:text-white transition-colors duration-300 group"
-                style={{ fontFamily: 'var(--font-inter)', fontWeight: 400 }}
-              >
-                {link.label}
-                <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#8B5CF6] group-hover:w-full transition-all duration-300" />
+                Orçamento
+                <ArrowUpRight size={13} className="opacity-70 group-hover:opacity-100 transition-opacity" />
               </button>
-            ))}
-          </nav>
 
-          {/* ── CTA ── */}
-          <div className="hidden md:block flex-shrink-0">
-            <button
-              onClick={() => handleNav('#contato')}
-              className="btn-primary py-2.5 px-5 text-[11px]"
-            >
-              Solicitar Orçamento
-            </button>
+              {/* Mobile toggle */}
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="md:hidden flex items-center justify-center w-10 h-10 text-[#A1A1AA] hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={mobileOpen ? 'close' : 'open'}
+                    initial={{ opacity: 0, rotate: -90, scale: 0.7 }}
+                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                    exit={{ opacity: 0, rotate: 90, scale: 0.7 }}
+                    transition={{ duration: 0.18 }}
+                  >
+                    {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                  </motion.div>
+                </AnimatePresence>
+              </button>
+            </div>
           </div>
-
-          {/* ── Mobile toggle ── */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-[#A1A1AA] hover:text-white transition-colors"
-            aria-label="Menu"
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
         </div>
       </motion.header>
 
       {/* ── Mobile Menu ── */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.22 }}
-            className="fixed inset-0 z-[9980] glass-dark pt-20 px-8 flex flex-col"
-          >
-            <nav className="flex flex-col gap-7 mt-4">
-              {navLinks.map((link, i) => (
-                <motion.button
-                  key={link.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.07 }}
-                  onClick={() => handleNav(link.href)}
-                  className="text-3xl font-display font-bold text-white text-left hover:text-[#A855F7] transition-colors tracking-tight"
-                  style={{ fontFamily: 'var(--font-manrope)' }}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-[9970] bg-black/40 backdrop-blur-sm"
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+              className="fixed top-0 right-0 bottom-0 z-[9980] w-[min(320px,85vw)] flex flex-col"
+              style={{
+                background: 'rgba(8,8,8,0.97)',
+                borderLeft: '1px solid rgba(139,92,246,0.12)',
+                backdropFilter: 'blur(40px)',
+              }}
+            >
+              {/* Panel header */}
+              <div className="flex items-center justify-between px-6 h-16 border-b border-[rgba(139,92,246,0.1)]">
+                <span
+                  className="text-[#555]"
+                  style={{
+                    fontFamily: 'var(--font-inter), Inter, sans-serif',
+                    fontSize: '11px',
+                    letterSpacing: '0.2em',
+                    textTransform: 'uppercase',
+                  }}
                 >
-                  {link.label}
-                </motion.button>
-              ))}
-              <motion.button
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: navLinks.length * 0.07 }}
-                onClick={() => handleNav('#contato')}
-                className="btn-primary mt-4 w-full justify-center"
-              >
-                Solicitar Orçamento
-              </motion.button>
-            </nav>
-          </motion.div>
+                  Menu
+                </span>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="w-8 h-8 flex items-center justify-center text-[#666] hover:text-white transition-colors rounded-md hover:bg-white/5"
+                  aria-label="Fechar"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Links */}
+              <nav className="flex-1 flex flex-col justify-center px-8 gap-2">
+                {navLinks.map((link, i) => (
+                  <motion.button
+                    key={link.href}
+                    initial={{ opacity: 0, x: 24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.08 + i * 0.06, ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
+                    onClick={() => handleNav(link.href)}
+                    className="text-left group py-4 border-b border-[rgba(255,255,255,0.04)] cursor-pointer"
+                  >
+                    <span
+                      className="text-white group-hover:text-[#A78BFA] transition-colors duration-200"
+                      style={{
+                        fontFamily: 'var(--font-sora), Sora, sans-serif',
+                        fontSize: '26px',
+                        fontWeight: 600,
+                        letterSpacing: '-0.02em',
+                        lineHeight: 1.2,
+                        display: 'block',
+                      }}
+                    >
+                      {link.label}
+                    </span>
+                  </motion.button>
+                ))}
+
+                {/* CTA mobile */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.08 + navLinks.length * 0.06 + 0.05, duration: 0.4 }}
+                  className="mt-6"
+                >
+                  <button
+                    onClick={() => handleNav('#contato')}
+                    className="w-full flex items-center justify-center gap-2 cursor-pointer"
+                    style={{
+                      padding: '14px 24px',
+                      background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontFamily: 'var(--font-sora), Sora, sans-serif',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      color: '#fff',
+                      boxShadow: '0 4px 24px rgba(139,92,246,0.4)',
+                    }}
+                  >
+                    Solicitar Orçamento
+                    <ArrowUpRight size={14} />
+                  </button>
+                </motion.div>
+              </nav>
+
+              {/* Footer */}
+              <div className="px-8 pb-8 pt-4 border-t border-[rgba(255,255,255,0.04)]">
+                <p
+                  className="text-[#444]"
+                  style={{
+                    fontFamily: 'var(--font-inter), Inter, sans-serif',
+                    fontSize: '11px',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  © 2025 Mixael Sevla
+                </p>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

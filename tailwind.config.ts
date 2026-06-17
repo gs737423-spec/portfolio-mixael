@@ -23,7 +23,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['var(--font-manrope)', 'sans-serif'],
+        display: ['var(--font-sora)', 'Sora', 'sans-serif'],
         body: ['var(--font-inter)', 'sans-serif'],
       },
       backgroundImage: {
