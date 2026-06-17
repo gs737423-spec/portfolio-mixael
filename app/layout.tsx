@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { Manrope, Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans, Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
-const manrope = Manrope({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-manrope',
@@ -43,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR" className={`${manrope.variable} ${inter.variable}`}>
+    <html lang="pt-BR" className={`${plusJakarta.variable} ${inter.variable}`}>
       <body className="bg-[#050505] text-white font-body antialiased overflow-x-hidden">
         <div className="grain-overlay" aria-hidden="true" />
         {children}
