@@ -175,7 +175,7 @@ export default function PortfolioSection({ projects }: { projects?: Project[] })
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <h2
               className="section-title"
-              style={{ fontFamily: 'var(--font-space-grotesk)' }}
+              style={{ fontFamily: 'var(--font-manrope)' }}
             >
               Meu{' '}
               <span className="gradient-text">Portfólio</span>
@@ -205,7 +205,7 @@ export default function PortfolioSection({ projects }: { projects?: Project[] })
                   ? 'text-white'
                   : 'text-[#A1A1AA] hover:text-white border border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.4)]'
               }`}
-              style={{ fontFamily: 'var(--font-space-grotesk)' }}
+              style={{ fontFamily: 'var(--font-manrope)' }}
             >
               {activeCategory === cat && (
                 <motion.span
@@ -287,7 +287,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               <div className="flex items-center gap-2 text-white">
                 <span
                   className="text-sm font-display font-500"
-                  style={{ fontFamily: 'var(--font-space-grotesk)' }}
+                  style={{ fontFamily: 'var(--font-manrope)' }}
                 >
                   Ver projeto
                 </span>
@@ -313,7 +313,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             </div>
             <h3
               className="font-display font-600 text-white text-lg mb-2 group-hover:text-[#C084FC] transition-colors duration-300 leading-snug"
-              style={{ fontFamily: 'var(--font-space-grotesk)' }}
+              style={{ fontFamily: 'var(--font-manrope)' }}
             >
               {project.title}
             </h3>

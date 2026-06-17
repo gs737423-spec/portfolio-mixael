@@ -126,7 +126,7 @@ export default function AdminDashboardPage() {
                   <Icon size={16} />
                 </div>
                 <div>
-                  <div className="text-white text-xl font-700 leading-none" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}>
+                  <div className="text-white text-xl font-700 leading-none" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}>
                     {stat.value}
                     {stat.href && unreadCount > 0 && (
                       <span className="ml-1.5 text-[10px] text-[#3b82f6] font-600">novo</span>
@@ -176,7 +176,7 @@ export default function AdminDashboardPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
             <Camera size={48} className="mx-auto text-[#333] mb-4" />
-            <h2 className="text-xl font-display font-600 text-white mb-2" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+            <h2 className="text-xl font-display font-600 text-white mb-2" style={{ fontFamily: 'var(--font-manrope)' }}>
               Nenhum projeto ainda
             </h2>
             <p className="text-[#A1A1AA] text-sm mb-6" style={{ fontFamily: 'var(--font-inter)' }}>
@@ -224,7 +224,7 @@ export default function AdminDashboardPage() {
                   <span className="category-badge text-[9px] mb-2 inline-block">
                     {project.category}
                   </span>
-                  <h3 className="font-display font-600 text-white text-sm leading-snug mb-1 line-clamp-1" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 600 }}>
+                  <h3 className="font-display font-600 text-white text-sm leading-snug mb-1 line-clamp-1" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 600 }}>
                     {project.title}
                   </h3>
                   {project.short_description && (

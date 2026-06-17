@@ -61,7 +61,7 @@ export default function OrcamentosPage() {
       <div className="border-b border-[rgba(139,92,246,0.1)] bg-[#080808]/95">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}>
+            <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}>
               Orçamentos
             </h1>
             <p className="text-[#555] text-xs mt-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
@@ -126,7 +126,7 @@ export default function OrcamentosPage() {
                     <div className="flex-1 min-w-0">
                       {/* Name + service */}
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="text-white text-sm font-600" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 600 }}>
+                        <span className="text-white text-sm font-600" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 600 }}>
                           {sub.name}
                         </span>
                         {sub.service_type && (

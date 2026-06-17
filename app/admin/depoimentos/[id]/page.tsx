@@ -94,7 +94,7 @@ export default function EditarDepoimentoPage({ params }: { params: Promise<{ id:
           </Link>
           <h1
             className="text-white text-base"
-            style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
           >
             Editar Depoimento
           </h1>

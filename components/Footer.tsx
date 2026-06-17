@@ -21,20 +21,20 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
             <div className="flex items-center gap-2">
               <div
                 className="w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-bold"
-                style={{ background: 'linear-gradient(135deg,#8B5CF6,#A855F7)', fontFamily: 'var(--font-space-grotesk)' }}
+                style={{ background: 'linear-gradient(135deg,#8B5CF6,#A855F7)', fontFamily: 'var(--font-manrope)' }}
               >
                 MS
               </div>
               <div className="flex items-baseline gap-1.5">
                 <span
                   className="text-[#A1A1AA]"
-                  style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 300, fontSize: '11px', letterSpacing: '0.22em', textTransform: 'uppercase' }}
+                  style={{ fontFamily: 'var(--font-manrope)', fontWeight: 300, fontSize: '11px', letterSpacing: '0.22em', textTransform: 'uppercase' }}
                 >
                   Mixael
                 </span>
                 <span
                   className="text-white"
-                  style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800, fontSize: '16px', letterSpacing: '-0.02em' }}
+                  style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800, fontSize: '16px', letterSpacing: '-0.02em' }}
                 >
                   Sevla
                 </span>

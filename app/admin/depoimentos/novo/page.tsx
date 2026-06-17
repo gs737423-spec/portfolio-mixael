@@ -70,7 +70,7 @@ export default function NovoDepoimentoPage() {
           </Link>
           <h1
             className="text-white text-base"
-            style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
           >
             Novo Depoimento
           </h1>

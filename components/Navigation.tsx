@@ -66,7 +66,7 @@ export default function Navigation() {
             >
               <span
                 className="text-white text-xs font-bold leading-none"
-                style={{ fontFamily: 'var(--font-space-grotesk)', letterSpacing: '-0.02em' }}
+                style={{ fontFamily: 'var(--font-manrope)', letterSpacing: '-0.02em' }}
               >
                 MS
               </span>
@@ -77,7 +77,7 @@ export default function Navigation() {
               <span
                 className="text-[#A1A1AA] group-hover:text-[#C084FC] transition-colors duration-300"
                 style={{
-                  fontFamily: 'var(--font-space-grotesk)',
+                  fontFamily: 'var(--font-manrope)',
                   fontWeight: 300,
                   fontSize: '10px',
                   letterSpacing: '0.28em',
@@ -89,7 +89,7 @@ export default function Navigation() {
               <span
                 className="text-white group-hover:text-[#C084FC] transition-colors duration-300"
                 style={{
-                  fontFamily: 'var(--font-space-grotesk)',
+                  fontFamily: 'var(--font-manrope)',
                   fontWeight: 800,
                   fontSize: '15px',
                   letterSpacing: '-0.02em',
@@ -156,7 +156,7 @@ export default function Navigation() {
                   transition={{ delay: i * 0.07 }}
                   onClick={() => handleNav(link.href)}
                   className="text-3xl font-display font-bold text-white text-left hover:text-[#A855F7] transition-colors tracking-tight"
-                  style={{ fontFamily: 'var(--font-space-grotesk)' }}
+                  style={{ fontFamily: 'var(--font-manrope)' }}
                 >
                   {link.label}
                 </motion.button>

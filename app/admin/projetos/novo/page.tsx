@@ -119,7 +119,7 @@ export default function NovoProjetoPage() {
           </Link>
           <h1
             className="font-display font-700 text-white text-base"
-            style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
           >
             Novo Projeto
           </h1>
@@ -374,7 +374,7 @@ export default function NovoProjetoPage() {
                   </div>
                 )}
                 <div className="space-y-2">
-                  <h3 className="font-display font-700 text-white" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+                  <h3 className="font-display font-700 text-white" style={{ fontFamily: 'var(--font-manrope)' }}>
                     {watch('title') || '—'}
                   </h3>
                   <span className="category-badge">{watch('category')}</span>

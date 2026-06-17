@@ -69,7 +69,7 @@ export default function ProjectPageClient({ project }: { project: Project }) {
               <h1
                 className="font-display font-800 text-white leading-tight"
                 style={{
-                  fontFamily: 'var(--font-space-grotesk)',
+                  fontFamily: 'var(--font-manrope)',
                   fontWeight: 800,
                   fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                 }}
@@ -112,7 +112,7 @@ export default function ProjectPageClient({ project }: { project: Project }) {
                 >
                   <h2
                     className="font-display font-600 text-white text-xl mb-4"
-                    style={{ fontFamily: 'var(--font-space-grotesk)' }}
+                    style={{ fontFamily: 'var(--font-manrope)' }}
                   >
                     Vídeo
                   </h2>
@@ -137,7 +137,7 @@ export default function ProjectPageClient({ project }: { project: Project }) {
                 >
                   <h2
                     className="font-display font-600 text-white text-xl mb-6"
-                    style={{ fontFamily: 'var(--font-space-grotesk)' }}
+                    style={{ fontFamily: 'var(--font-manrope)' }}
                   >
                     Galeria
                   </h2>
@@ -178,7 +178,7 @@ export default function ProjectPageClient({ project }: { project: Project }) {
               >
                 <h3
                   className="font-display font-600 text-white text-lg mb-6 pb-4 border-b border-[rgba(139,92,246,0.1)]"
-                  style={{ fontFamily: 'var(--font-space-grotesk)' }}
+                  style={{ fontFamily: 'var(--font-manrope)' }}
                 >
                   Detalhes do Projeto
                 </h3>

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,8 +14,10 @@
   --color-text: #FFFFFF;
   --color-text-muted: #A1A1AA;
   --color-border: rgba(139, 92, 246, 0.2);
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-display: 'Manrope', sans-serif;
   --font-body: 'Inter', sans-serif;
+  --font-manrope: 'Manrope', sans-serif;
+  --font-inter: 'Inter', sans-serif;
 }
 
 * {
@@ -214,7 +216,7 @@ body {
   font-family: var(--font-inter);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-primary);
   display: flex;
@@ -232,11 +234,11 @@ body {
 
 /* === SECTION TITLE === */
 .section-title {
-  font-family: var(--font-display);
+  font-family: var(--font-manrope);
   font-weight: 800;
-  font-size: clamp(2.2rem, 5vw, 3.75rem);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
 }
 
 /* === DIVIDER === */

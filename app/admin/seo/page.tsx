@@ -57,7 +57,7 @@ export default function SeoPage() {
   const Section = ({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) => (
     <div className="rounded-xl bg-[#111] border border-[rgba(139,92,246,0.1)] p-6 flex flex-col gap-5">
       <h2 className="text-white text-sm font-700 border-b border-[rgba(139,92,246,0.1)] pb-3 flex items-center gap-2"
-        style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+        style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
       >
         <Icon size={15} className="text-[#8B5CF6]" />
         {title}
@@ -81,7 +81,7 @@ export default function SeoPage() {
       {/* Header */}
       <div className="border-b border-[rgba(139,92,246,0.1)] bg-[#080808]/95">
         <div className="max-w-2xl mx-auto px-6 py-4">
-          <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}>
+          <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}>
             SEO
           </h1>
           <p className="text-[#555] text-xs mt-0.5" style={{ fontFamily: 'var(--font-inter)' }}>

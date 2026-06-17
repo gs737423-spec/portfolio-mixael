@@ -62,7 +62,7 @@ export default function ConfiguracoesPage() {
   const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="rounded-xl bg-[#111] border border-[rgba(139,92,246,0.1)] p-6 flex flex-col gap-5">
       <h2 className="text-white text-sm font-700 border-b border-[rgba(139,92,246,0.1)] pb-3"
-        style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+        style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
       >
         {title}
       </h2>
@@ -84,7 +84,7 @@ export default function ConfiguracoesPage() {
     <div className="min-h-screen bg-[#080808]">
       <div className="bg-[#080808]/95 border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-2xl mx-auto px-6 py-4">
-          <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}>
+          <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}>
             Configurações
           </h1>
           <p className="text-[#555] text-xs mt-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
@@ -144,7 +144,7 @@ export default function ConfiguracoesPage() {
                       {...register(v)}
                       placeholder="500+"
                       className="admin-input text-center"
-                      style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+                      style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
                     />
                     <input
                       {...register(l)}

@@ -70,7 +70,7 @@ export default function AboutSection({ about }: { about?: AboutContent }) {
             >
               <div
                 className="font-display font-800 text-3xl gradient-text"
-                style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
+                style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800 }}
               >
                 {a.experience_years}
               </div>
@@ -105,7 +105,7 @@ export default function AboutSection({ about }: { about?: AboutContent }) {
             <motion.h2
               variants={itemVariants}
               className="section-title"
-              style={{ fontFamily: 'var(--font-space-grotesk)' }}
+              style={{ fontFamily: 'var(--font-manrope)' }}
             >
               Cada imagem conta{' '}
               <span className="gradient-text">uma história</span>
@@ -157,7 +157,7 @@ export default function AboutSection({ about }: { about?: AboutContent }) {
                   />
                   <div
                     className="font-display font-800 text-xl text-white"
-                    style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
+                    style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800 }}
                   >
                     {value}
                   </div>

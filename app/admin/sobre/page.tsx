@@ -97,7 +97,7 @@ export default function SobrePage() {
     <div className="min-h-screen bg-[#080808]">
       <div className="bg-[#080808]/95 border-b border-[rgba(139,92,246,0.1)]">
         <div className="max-w-2xl mx-auto px-6 py-4">
-          <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}>
+          <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}>
             Seção Sobre
           </h1>
           <p className="text-[#555] text-xs mt-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
@@ -234,7 +234,7 @@ export default function SobrePage() {
                     {...register(`stat${n}_value` as keyof AboutForm)}
                     placeholder="500+"
                     className="admin-input w-20 text-center"
-                    style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+                    style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
                   />
                   <input
                     {...register(`stat${n}_label` as keyof AboutForm)}

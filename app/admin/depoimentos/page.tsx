@@ -40,7 +40,7 @@ export default function DepoimentosPage() {
           <div>
             <h1
               className="text-2xl text-white"
-              style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
+              style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800 }}
             >
               Depoimentos
             </h1>
@@ -92,7 +92,7 @@ export default function DepoimentosPage() {
                   <div className="flex items-center gap-2 mb-1">
                     <span
                       className="text-white text-sm font-600"
-                      style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 600 }}
+                      style={{ fontFamily: 'var(--font-manrope)', fontWeight: 600 }}
                     >
                       {t.name}
                     </span>

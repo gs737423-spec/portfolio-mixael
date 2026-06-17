@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
           </div>
           <h1
             className="text-xl font-800 text-white"
-            style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 800 }}
+            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800 }}
           >
             Área Administrativa
           </h1>

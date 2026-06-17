@@ -79,7 +79,7 @@ export default function ContactSection({ settings }: { settings?: SiteSettings }
               <div className="section-label mb-4">Contato</div>
               <h2
                 className="section-title"
-                style={{ fontFamily: 'var(--font-space-grotesk)' }}
+                style={{ fontFamily: 'var(--font-manrope)' }}
               >
                 Vamos criar algo{' '}
                 <span className="gradient-text">incrível</span>{' '}

@@ -58,7 +58,7 @@ export default function TestimonialsSection({ testimonials }: { testimonials?: T
           <div className="section-label justify-center mb-4">Depoimentos</div>
           <h2
             className="section-title"
-            style={{ fontFamily: 'var(--font-space-grotesk)' }}
+            style={{ fontFamily: 'var(--font-manrope)' }}
           >
             O que meus{' '}
             <span className="gradient-text">clientes dizem</span>
@@ -114,7 +114,7 @@ export default function TestimonialsSection({ testimonials }: { testimonials?: T
                 <div>
                   <div
                     className="font-display font-600 text-white text-sm"
-                    style={{ fontFamily: 'var(--font-space-grotesk)' }}
+                    style={{ fontFamily: 'var(--font-manrope)' }}
                   >
                     {t.name}
                   </div>

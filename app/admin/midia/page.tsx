@@ -97,7 +97,7 @@ export default function MidiaPage() {
       <div className="border-b border-[rgba(139,92,246,0.1)] bg-[#080808]/95">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}>
+            <h1 className="text-white text-base" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}>
               Biblioteca de Mídia
             </h1>
             <p className="text-[#555] text-xs mt-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
@@ -212,7 +212,7 @@ export default function MidiaPage() {
       {selected && (
         <div className="fixed right-0 top-0 h-full w-72 bg-[#0d0d0d] border-l border-[rgba(139,92,246,0.1)] z-50 flex flex-col shadow-2xl">
           <div className="flex items-center justify-between px-5 py-4 border-b border-[rgba(139,92,246,0.1)]">
-            <span className="text-white text-sm font-600" style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 600 }}>
+            <span className="text-white text-sm font-600" style={{ fontFamily: 'var(--font-manrope)', fontWeight: 600 }}>
               Detalhes
             </span>
             <button onClick={() => setSelected(null)} className="text-[#555] hover:text-white transition-colors">

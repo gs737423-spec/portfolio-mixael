@@ -49,7 +49,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
           <div>
             <p
               className="text-white text-sm font-700 leading-none"
-              style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
             >
               Mixael Sevla
             </p>
@@ -155,7 +155,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
             </div>
             <span
               className="text-white text-sm font-700"
-              style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
             >
               Admin
             </span>

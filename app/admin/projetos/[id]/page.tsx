@@ -133,7 +133,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
           </Link>
           <h1
             className="font-display font-700 text-white text-base flex-1 truncate"
-            style={{ fontFamily: 'var(--font-space-grotesk)', fontWeight: 700 }}
+            style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
           >
             Editar: {project?.title}
           </h1>
