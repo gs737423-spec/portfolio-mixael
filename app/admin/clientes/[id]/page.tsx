@@ -1,14 +1,13 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, use, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import {
   ArrowLeft, Upload, X, Plus, Trash2, ExternalLink,
-  Camera, Film, Video, Save, Link as LinkIcon, FolderOpen,
+  Camera, Film, Video, Save, Link as LinkIcon, FolderOpen, Loader2,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { Client, ClientMedia, Project } from '@/lib/types'
@@ -18,11 +17,6 @@ interface ClientForm {
   slug: string
   description: string
   active: boolean
-}
-
-interface MediaForm {
-  title: string
-  video_url: string
 }
 
 export default function EditClientePage({ params }: { params: Promise<{ id: string }> }) {
@@ -38,8 +32,6 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [addingMedia, setAddingMedia] = useState<'reel' | 'video' | null>(null)
-  const [mediaForm, setMediaForm] = useState<MediaForm>({ title: '', video_url: '' })
-  const [savingMedia, setSavingMedia] = useState(false)
   const [linkingProject, setLinkingProject] = useState(false)
 
   const { register, handleSubmit, reset } = useForm<ClientForm>()
@@ -104,24 +96,6 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
     load()
   }
 
-  const addMedia = async () => {
-    if (!mediaForm.title || !addingMedia) return
-    setSavingMedia(true)
-    const { error } = await supabase.from('client_media').insert({
-      client_id: id,
-      type: addingMedia,
-      title: mediaForm.title,
-      video_url: mediaForm.video_url || null,
-      display_order: 0,
-    })
-    if (error) { toast.error('Erro ao adicionar'); setSavingMedia(false); return }
-    toast.success('Adicionado!')
-    setMediaForm({ title: '', video_url: '' })
-    setAddingMedia(null)
-    setSavingMedia(false)
-    load()
-  }
-
   const removeMedia = async (mediaId: string) => {
     await supabase.from('client_media').delete().eq('id', mediaId)
     toast.success('Removido')
@@ -148,7 +122,7 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
           </Link>
         </div>
 
-        {/* ── SEÇÃO: Informações ── */}
+        {/* ── Informações ── */}
         <section className="rounded-2xl border border-[rgba(255,255,255,0.06)] p-6 mb-6" style={{ background: 'rgba(255,255,255,0.02)' }}>
           <h2 className="text-white font-semibold mb-5 flex items-center gap-2" style={{ fontFamily: 'var(--font-sora)' }}>
             <FolderOpen size={16} className="text-[#8B5CF6]" />
@@ -211,7 +185,7 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
           </form>
         </section>
 
-        {/* ── SEÇÃO: Fotos (Projetos) ── */}
+        {/* ── Fotos ── */}
         <section className="rounded-2xl border border-[rgba(255,255,255,0.06)] p-6 mb-6" style={{ background: 'rgba(255,255,255,0.02)' }}>
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-white font-semibold flex items-center gap-2" style={{ fontFamily: 'var(--font-sora)' }}>
@@ -233,10 +207,9 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          {/* Link existing project */}
           {linkingProject && allProjects.length > 0 && (
             <div className="mb-4 p-4 rounded-xl bg-[rgba(139,92,246,0.07)] border border-[rgba(139,92,246,0.15)]">
-              <p className="text-xs text-[#A1A1AA] mb-3">Selecione um projeto para vincular a este cliente:</p>
+              <p className="text-xs text-[#A1A1AA] mb-3">Selecione um projeto para vincular:</p>
               <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
                 {allProjects.map(p => (
                   <button key={p.id} onClick={() => linkProject(p.id)}
@@ -257,10 +230,10 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
                 <div key={p.id} className="flex items-center gap-3 p-3 rounded-xl border border-[rgba(255,255,255,0.05)]" style={{ background: 'rgba(255,255,255,0.02)' }}>
                   {p.cover_image && <img src={p.cover_image} alt={p.title} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />}
                   <span className="flex-1 text-white text-sm">{p.title}</span>
-                  <Link href={`/admin/projetos/${p.id}`} className="p-1.5 text-[#555] hover:text-[#8B5CF6] transition-colors" title="Editar">
+                  <Link href={`/admin/projetos/${p.id}`} className="p-1.5 text-[#555] hover:text-[#8B5CF6] transition-colors">
                     <ExternalLink size={13} />
                   </Link>
-                  <button onClick={() => unlinkProject(p.id)} className="p-1.5 text-[#555] hover:text-red-400 transition-colors" title="Desvincular">
+                  <button onClick={() => unlinkProject(p.id)} className="p-1.5 text-[#555] hover:text-red-400 transition-colors">
                     <X size={13} />
                   </button>
                 </div>
@@ -269,59 +242,123 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
           )}
         </section>
 
-        {/* ── SEÇÃO: Reels ── */}
-        <MediaSection
+        {/* ── Reels ── */}
+        <VideoUploadSection
           title="Reels"
           icon={<Film size={16} className="text-[#8B5CF6]" />}
           subtitle="tudo junto"
+          type="reel"
+          clientId={id}
           items={reels}
-          adding={addingMedia === 'reel'}
-          mediaForm={mediaForm}
-          savingMedia={savingMedia}
-          onStartAdd={() => { setAddingMedia('reel'); setMediaForm({ title: '', video_url: '' }) }}
-          onCancelAdd={() => setAddingMedia(null)}
-          onChangeForm={setMediaForm}
-          onSave={addMedia}
+          active={addingMedia === 'reel'}
+          onActivate={() => setAddingMedia('reel')}
+          onCancel={() => setAddingMedia(null)}
           onRemove={removeMedia}
+          onDone={() => { setAddingMedia(null); load() }}
         />
 
-        {/* ── SEÇÃO: Vídeos Institucionais ── */}
-        <MediaSection
+        {/* ── Vídeos Institucionais ── */}
+        <VideoUploadSection
           title="Vídeos Institucionais"
           icon={<Video size={16} className="text-[#8B5CF6]" />}
           subtitle="tudo junto"
+          type="video"
+          clientId={id}
           items={videos}
-          adding={addingMedia === 'video'}
-          mediaForm={mediaForm}
-          savingMedia={savingMedia}
-          onStartAdd={() => { setAddingMedia('video'); setMediaForm({ title: '', video_url: '' }) }}
-          onCancelAdd={() => setAddingMedia(null)}
-          onChangeForm={setMediaForm}
-          onSave={addMedia}
+          active={addingMedia === 'video'}
+          onActivate={() => setAddingMedia('video')}
+          onCancel={() => setAddingMedia(null)}
           onRemove={removeMedia}
+          onDone={() => { setAddingMedia(null); load() }}
         />
       </div>
     </div>
   )
 }
 
-function MediaSection({
-  title, icon, subtitle, items, adding, mediaForm, savingMedia,
-  onStartAdd, onCancelAdd, onChangeForm, onSave, onRemove,
+// ── Componente de upload de vídeo ──
+function VideoUploadSection({
+  title, icon, subtitle, type, clientId, items,
+  active, onActivate, onCancel, onRemove, onDone,
 }: {
   title: string
   icon: React.ReactNode
   subtitle: string
+  type: 'reel' | 'video'
+  clientId: string
   items: ClientMedia[]
-  adding: boolean
-  mediaForm: MediaForm
-  savingMedia: boolean
-  onStartAdd: () => void
-  onCancelAdd: () => void
-  onChangeForm: (f: MediaForm) => void
-  onSave: () => void
+  active: boolean
+  onActivate: () => void
+  onCancel: () => void
   onRemove: (id: string) => void
+  onDone: () => void
 }) {
+  const [titleInput, setTitleInput] = useState('')
+  const [videoFile, setVideoFile] = useState<File | null>(null)
+  const [thumbFile, setThumbFile] = useState<File | null>(null)
+  const [thumbPreview, setThumbPreview] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const fileRef = useRef<HTMLInputElement>(null)
+  const thumbRef = useRef<HTMLInputElement>(null)
+
+  const reset = () => {
+    setTitleInput('')
+    setVideoFile(null)
+    setThumbFile(null)
+    setThumbPreview(null)
+    setProgress(0)
+  }
+
+  const handleSave = async () => {
+    if (!titleInput || !videoFile) { toast.error('Adicione um título e um arquivo de vídeo'); return }
+    setUploading(true)
+    try {
+      const ts = Date.now()
+      const ext = videoFile.name.split('.').pop()
+      const videoPath = `clients/${clientId}/${type}/${ts}.${ext}`
+
+      // Upload do vídeo
+      const { data: vUp, error: vErr } = await supabase.storage
+        .from('portfolio')
+        .upload(videoPath, videoFile, { upsert: true })
+      if (vErr) throw vErr
+      const { data: { publicUrl: videoUrl } } = supabase.storage.from('portfolio').getPublicUrl(vUp.path)
+
+      // Upload da thumbnail (opcional)
+      let thumbUrl: string | null = null
+      if (thumbFile) {
+        const tExt = thumbFile.name.split('.').pop()
+        const thumbPath = `clients/${clientId}/${type}/${ts}_thumb.${tExt}`
+        const { data: tUp, error: tErr } = await supabase.storage
+          .from('portfolio')
+          .upload(thumbPath, thumbFile, { upsert: true })
+        if (!tErr && tUp) {
+          const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(tUp.path)
+          thumbUrl = publicUrl
+        }
+      }
+
+      const { error } = await supabase.from('client_media').insert({
+        client_id: clientId,
+        type,
+        title: titleInput,
+        video_url: videoUrl,
+        thumbnail: thumbUrl,
+        display_order: 0,
+      })
+      if (error) throw error
+
+      toast.success('Vídeo adicionado!')
+      reset()
+      onDone()
+    } catch (e: unknown) {
+      toast.error((e as Error).message ?? 'Erro no upload')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   return (
     <section className="rounded-2xl border border-[rgba(255,255,255,0.06)] p-6 mb-6" style={{ background: 'rgba(255,255,255,0.02)' }}>
       <div className="flex items-center justify-between mb-5">
@@ -330,68 +367,111 @@ function MediaSection({
           {title}
           <span className="text-xs text-[#555] font-normal">— {subtitle}</span>
         </h2>
-        {!adding && (
-          <button onClick={onStartAdd}
+        {!active && (
+          <button onClick={onActivate}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-white border border-[rgba(255,255,255,0.1)] hover:bg-white/5 transition-all">
             <Plus size={12} />
-            Adicionar
+            Adicionar vídeo
           </button>
         )}
       </div>
 
-      {adding && (
-        <div className="mb-4 p-4 rounded-xl bg-[rgba(139,92,246,0.07)] border border-[rgba(139,92,246,0.15)] flex flex-col gap-3">
+      {active && (
+        <div className="mb-4 p-4 rounded-xl bg-[rgba(139,92,246,0.07)] border border-[rgba(139,92,246,0.15)] flex flex-col gap-4">
+          {/* Título */}
           <div>
             <label className="block text-xs text-[#71717A] uppercase tracking-wider mb-1.5">Título *</label>
             <input
-              value={mediaForm.title}
-              onChange={e => onChangeForm({ ...mediaForm, title: e.target.value })}
+              value={titleInput}
+              onChange={e => setTitleInput(e.target.value)}
               placeholder="Nome do vídeo"
               className="admin-input w-full"
             />
           </div>
+
+          {/* Upload vídeo */}
           <div>
-            <label className="block text-xs text-[#71717A] uppercase tracking-wider mb-1.5">Link do vídeo (YouTube/Vimeo)</label>
-            <input
-              value={mediaForm.video_url}
-              onChange={e => onChangeForm({ ...mediaForm, video_url: e.target.value })}
-              placeholder="https://youtube.com/watch?v=..."
-              className="admin-input w-full"
-            />
+            <label className="block text-xs text-[#71717A] uppercase tracking-wider mb-1.5">Arquivo de vídeo *</label>
+            {videoFile ? (
+              <div className="flex items-center gap-3 p-3 rounded-xl border border-[rgba(255,255,255,0.08)]" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                <Film size={16} className="text-[#8B5CF6] flex-shrink-0" />
+                <span className="text-white text-sm truncate flex-1">{videoFile.name}</span>
+                <span className="text-[#555] text-xs">{(videoFile.size / 1024 / 1024).toFixed(1)} MB</span>
+                <button onClick={() => setVideoFile(null)} className="text-[#555] hover:text-red-400 transition-colors">
+                  <X size={14} />
+                </button>
+              </div>
+            ) : (
+              <label className="flex flex-col items-center justify-center h-24 rounded-xl border border-dashed border-[rgba(255,255,255,0.1)] cursor-pointer hover:border-[rgba(139,92,246,0.4)] transition-colors">
+                <Upload size={20} className="text-[#555] mb-1" />
+                <span className="text-[#555] text-xs">MP4, MOV, WebM</span>
+                <input ref={fileRef} type="file" accept="video/*" className="hidden"
+                  onChange={e => { const f = e.target.files?.[0]; if (f) setVideoFile(f) }} />
+              </label>
+            )}
           </div>
+
+          {/* Thumbnail (opcional) */}
+          <div>
+            <label className="block text-xs text-[#71717A] uppercase tracking-wider mb-1.5">
+              Thumbnail <span className="text-[#444] normal-case">— opcional</span>
+            </label>
+            {thumbPreview ? (
+              <div className="relative w-32 h-20 rounded-lg overflow-hidden group">
+                <img src={thumbPreview} alt="thumb" className="w-full h-full object-cover" />
+                <button onClick={() => { setThumbFile(null); setThumbPreview(null) }}
+                  className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <X size={14} className="text-white" />
+                </button>
+              </div>
+            ) : (
+              <label className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-[rgba(255,255,255,0.08)] cursor-pointer hover:border-[rgba(139,92,246,0.3)] transition-colors w-fit">
+                <Upload size={13} className="text-[#555]" />
+                <span className="text-[#555] text-xs">Upload thumbnail</span>
+                <input ref={thumbRef} type="file" accept="image/*" className="hidden"
+                  onChange={e => {
+                    const f = e.target.files?.[0]; if (!f) return
+                    setThumbFile(f); setThumbPreview(URL.createObjectURL(f))
+                  }} />
+              </label>
+            )}
+          </div>
+
           <div className="flex gap-2">
-            <button onClick={onCancelAdd} className="flex-1 py-2 rounded-lg text-sm text-[#71717A] border border-[rgba(255,255,255,0.08)] hover:text-white transition-colors">
+            <button onClick={() => { reset(); onCancel() }}
+              className="flex-1 py-2.5 rounded-lg text-sm text-[#71717A] border border-[rgba(255,255,255,0.08)] hover:text-white transition-colors">
               Cancelar
             </button>
-            <button onClick={onSave} disabled={savingMedia || !mediaForm.title}
-              className="flex-1 py-2 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-50"
+            <button onClick={handleSave} disabled={uploading || !titleInput || !videoFile}
+              className="flex-1 py-2.5 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               style={{ background: 'rgba(139,92,246,0.85)' }}>
-              {savingMedia ? 'Salvando...' : 'Adicionar'}
+              {uploading ? <><Loader2 size={14} className="animate-spin" /> Enviando...</> : 'Fazer upload'}
             </button>
           </div>
         </div>
       )}
 
       {items.length === 0 ? (
-        <p className="text-[#555] text-sm text-center py-6">Nenhum item adicionado ainda</p>
+        <p className="text-[#555] text-sm text-center py-6">Nenhum vídeo adicionado ainda</p>
       ) : (
         <div className="flex flex-col gap-2">
           {items.map(item => (
             <div key={item.id} className="flex items-center gap-3 p-3 rounded-xl border border-[rgba(255,255,255,0.05)]" style={{ background: 'rgba(255,255,255,0.02)' }}>
-              <div className="flex-1 min-w-0">
-                <p className="text-white text-sm truncate">{item.title}</p>
-                {item.video_url && (
-                  <p className="text-[#555] text-xs truncate mt-0.5">{item.video_url}</p>
-                )}
-              </div>
+              {item.thumbnail ? (
+                <img src={item.thumbnail} alt={item.title} className="w-12 h-8 rounded object-cover flex-shrink-0" />
+              ) : (
+                <div className="w-12 h-8 rounded bg-[#111] flex items-center justify-center flex-shrink-0">
+                  <Film size={12} className="text-[#444]" />
+                </div>
+              )}
+              <span className="flex-1 text-white text-sm truncate">{item.title}</span>
               {item.video_url && (
                 <a href={item.video_url} target="_blank" rel="noopener noreferrer"
                   className="p-1.5 text-[#555] hover:text-[#8B5CF6] transition-colors">
                   <ExternalLink size={13} />
                 </a>
               )}
-              <button onClick={() => onRemove(item.id)}
-                className="p-1.5 text-[#555] hover:text-red-400 transition-colors">
+              <button onClick={() => onRemove(item.id)} className="p-1.5 text-[#555] hover:text-red-400 transition-colors">
                 <Trash2 size={13} />
               </button>
             </div>
@@ -400,9 +480,4 @@ function MediaSection({
       )}
     </section>
   )
-}
-
-interface MediaForm {
-  title: string
-  video_url: string
 }

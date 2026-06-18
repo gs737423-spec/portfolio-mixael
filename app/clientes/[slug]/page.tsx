@@ -7,16 +7,6 @@ import type { Client, ClientMedia, Project } from '@/lib/types'
 
 export const dynamic = 'force-dynamic'
 
-function getEmbedUrl(url: string): string {
-  // YouTube
-  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/)
-  if (yt) return `https://www.youtube.com/embed/${yt[1]}`
-  // Vimeo
-  const vi = url.match(/vimeo\.com\/(\d+)/)
-  if (vi) return `https://player.vimeo.com/video/${vi[1]}`
-  return url
-}
-
 export default async function ClientePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const supabase = await createSupabaseServerClient()
@@ -108,13 +98,13 @@ export default async function ClientePage({ params }: { params: Promise<{ slug: 
               {reels.map(r => (
                 <div key={r.id} className="rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.06)]">
                   {r.video_url ? (
-                    <div className="aspect-video">
-                      <iframe
-                        src={getEmbedUrl(r.video_url)}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        title={r.title}
+                    <div className="aspect-video bg-black">
+                      <video
+                        src={r.video_url}
+                        poster={r.thumbnail ?? undefined}
+                        controls
+                        preload="metadata"
+                        className="w-full h-full object-contain"
                       />
                     </div>
                   ) : (
@@ -139,13 +129,13 @@ export default async function ClientePage({ params }: { params: Promise<{ slug: 
               {institutionalVideos.map(v => (
                 <div key={v.id} className="rounded-2xl overflow-hidden border border-[rgba(255,255,255,0.06)]">
                   {v.video_url ? (
-                    <div className="aspect-video">
-                      <iframe
-                        src={getEmbedUrl(v.video_url)}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        title={v.title}
+                    <div className="aspect-video bg-black">
+                      <video
+                        src={v.video_url}
+                        poster={v.thumbnail ?? undefined}
+                        controls
+                        preload="metadata"
+                        className="w-full h-full object-contain"
                       />
                     </div>
                   ) : (
