@@ -8,11 +8,12 @@ import toast from 'react-hot-toast'
 import {
   FolderOpen, User, Settings,
   ExternalLink, LogOut, Menu, X,
-  Image, MessageSquare, Search, Tag, ArrowUpRight,
+  Image, MessageSquare, Search, Tag, ArrowUpRight, Briefcase,
 } from 'lucide-react'
 
 const NAV = [
   { href: '/admin',               label: 'Projetos',      icon: FolderOpen,    exact: true },
+  { href: '/admin/clientes',      label: 'Clientes',      icon: Briefcase },
   { href: '/admin/categorias',    label: 'Categorias',    icon: Tag },
   { href: '/admin/midia',         label: 'Mídia',         icon: Image },
   { href: '/admin/orcamentos',    label: 'Orçamentos',    icon: MessageSquare },

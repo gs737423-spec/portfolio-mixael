@@ -11,8 +11,31 @@ export interface Project {
   date: string | null
   display_order: number
   published: boolean
+  client_id: string | null
   created_at: string
   updated_at: string
+}
+
+export interface Client {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  cover_image: string | null
+  active: boolean
+  display_order: number
+  created_at: string
+}
+
+export interface ClientMedia {
+  id: string
+  client_id: string
+  type: 'reel' | 'video'
+  title: string
+  thumbnail: string | null
+  video_url: string | null
+  display_order: number
+  created_at: string
 }
 
 export interface CategoryItem {
