@@ -6,8 +6,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { ArrowLeft, Upload, X, Plus, Save, Loader2 } from 'lucide-react'
+import { ArrowLeft, Upload, X, Plus, Save, Loader2, Play } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { uploadFile as uploadToR2, uploadFiles as uploadFilesToR2, deleteFiles } from '@/lib/upload'
 import type { AdminProjectForm, Project, CategoryItem } from '@/lib/types'
 
 export default function EditarProjetoPage({ params }: { params: Promise<{ id: string }> }) {
@@ -16,11 +17,13 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [newPhotos, setNewPhotos] = useState<File[]>([])
   const [newPhotoPreviews, setNewPhotoPreviews] = useState<string[]>([])
   const [existingImages, setExistingImages] = useState<string[]>([])
+  const [removedImages, setRemovedImages] = useState<string[]>([])
   const [categories, setCategories] = useState<CategoryItem[]>([])
 
   const {
@@ -66,28 +69,24 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
     setLoading(false)
   }
 
-  const uploadFile = async (file: File, path: string): Promise<string> => {
-    const { data, error } = await supabase.storage
-      .from('portfolio')
-      .upload(path, file, { upsert: true })
-    if (error) throw error
-    const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(data.path)
-    return publicUrl
-  }
-
   const onSubmit = async (formData: AdminProjectForm) => {
     if (!project) return
     setSaving(true)
     try {
       let coverUrl = project.cover_image
       if (coverFile) {
-        coverUrl = await uploadFile(coverFile, `${project.slug}/cover-${Date.now()}-${coverFile.name}`)
+        setUploadProgress({ done: 0, total: newPhotos.length + 1 })
+        coverUrl = await uploadToR2(coverFile, `projects/${project.slug}`)
+        setUploadProgress({ done: 1, total: newPhotos.length + 1 })
       }
 
-      const newUrls: string[] = []
-      for (const file of newPhotos) {
-        const url = await uploadFile(file, `${project.slug}/${Date.now()}-${file.name}`)
-        newUrls.push(url)
+      let newUrls: string[] = []
+      if (newPhotos.length > 0) {
+        newUrls = await uploadFilesToR2(
+          newPhotos,
+          `projects/${project.slug}`,
+          (done) => setUploadProgress({ done: done + (coverFile ? 1 : 0), total: newPhotos.length + (coverFile ? 1 : 0) }),
+        )
       }
 
       const { error } = await supabase
@@ -107,6 +106,10 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
         .eq('id', project.id)
 
       if (error) throw error
+
+      const toDelete = [...removedImages]
+      if (coverFile && project.cover_image) toDelete.push(project.cover_image)
+      if (toDelete.length > 0) deleteFiles(toDelete)
 
       toast.success('Projeto atualizado!')
       router.push('/admin')
@@ -235,42 +238,63 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
           {/* Gallery */}
           <div>
             <label className="block text-sm text-[#A1A1AA] mb-3 font-500" style={{ fontFamily: 'var(--font-inter)' }}>
-              Galeria ({existingImages.length + newPhotos.length} fotos)
+              Galeria ({existingImages.length + newPhotos.length} arquivos)
             </label>
             <div className="grid grid-cols-3 gap-3">
-              {existingImages.map((src, i) => (
-                <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
-                  <Image src={src} alt={`Foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
-                  <button
-                    type="button"
-                    onClick={() => setExistingImages((prev) => prev.filter((_, idx) => idx !== i))}
-                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
-                  >
-                    <X size={10} />
-                  </button>
-                </div>
-              ))}
-              {newPhotoPreviews.map((src, i) => (
-                <div key={`new-${i}`} className="relative aspect-square rounded-lg overflow-hidden ring-2 ring-[#8B5CF6]/50">
-                  <Image src={src} alt={`Nova foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setNewPhotos((prev) => prev.filter((_, idx) => idx !== i))
-                      setNewPhotoPreviews((prev) => prev.filter((_, idx) => idx !== i))
-                    }}
-                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
-                  >
-                    <X size={10} />
-                  </button>
-                </div>
-              ))}
+              {existingImages.map((src, i) => {
+                const isVideo = /\.(mp4|mov|avi|webm)$/i.test(src)
+                return (
+                  <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
+                    {isVideo ? (
+                      <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center">
+                        <Play size={24} className="text-[#8B5CF6]" />
+                      </div>
+                    ) : (
+                      <Image src={src} alt={`Foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRemovedImages((prev) => [...prev, src])
+                        setExistingImages((prev) => prev.filter((_, idx) => idx !== i))
+                      }}
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                )
+              })}
+              {newPhotoPreviews.map((src, i) => {
+                const isVideo = newPhotos[i]?.type?.startsWith('video/')
+                return (
+                  <div key={`new-${i}`} className="relative aspect-square rounded-lg overflow-hidden ring-2 ring-[#8B5CF6]/50">
+                    {isVideo ? (
+                      <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center">
+                        <Play size={24} className="text-[#8B5CF6]" />
+                      </div>
+                    ) : (
+                      <Image src={src} alt={`Nova foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNewPhotos((prev) => prev.filter((_, idx) => idx !== i))
+                        setNewPhotoPreviews((prev) => prev.filter((_, idx) => idx !== i))
+                      }}
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                )
+              })}
               <label className="cursor-pointer aspect-square rounded-lg border-2 border-dashed border-[rgba(139,92,246,0.2)] flex flex-col items-center justify-center hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.04)] transition-all bg-[#111]">
                 <Plus size={20} className="text-[#8B5CF6]" />
                 <span className="text-[#555] text-[10px] mt-1" style={{ fontFamily: 'var(--font-inter)' }}>Adicionar</span>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/*,video/*"
                   multiple
                   className="hidden"
                   onChange={(e) => {
@@ -309,7 +333,9 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
             {saving ? (
               <span className="flex items-center gap-2">
                 <Loader2 size={16} className="animate-spin" />
-                Salvando...
+                {uploadProgress
+                  ? `Enviando ${uploadProgress.done}/${uploadProgress.total} fotos...`
+                  : 'Salvando...'}
               </span>
             ) : (
               <>

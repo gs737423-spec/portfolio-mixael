@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Star, Upload, X } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { uploadFile as uploadToR2 } from '@/lib/upload'
 
 interface TestimonialForm {
   name: string
@@ -33,14 +34,7 @@ export default function NovoDepoimentoPage() {
       let photoUrl: string | null = null
 
       if (photoFile) {
-        const ext = photoFile.name.split('.').pop()
-        const path = `depoimentos/${Date.now()}.${ext}`
-        const { data: up, error: upErr } = await supabase.storage
-          .from('portfolio')
-          .upload(path, photoFile, { upsert: true })
-        if (upErr) throw upErr
-        const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(up.path)
-        photoUrl = publicUrl
+        photoUrl = await uploadToR2(photoFile, 'depoimentos')
       }
 
       const { error } = await supabase.from('testimonials').insert({

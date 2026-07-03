@@ -6,25 +6,37 @@ import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowUpRight, ExternalLink } from 'lucide-react'
+import { ArrowUpRight, ChevronDown } from 'lucide-react'
 import type { Project, CategoryItem } from '@/lib/types'
 
 const ALL_LABEL = 'Todos'
+const PAGE_SIZE = 9
 
 export default function PortfolioSection({ projects = [], categories = [] }: { projects?: Project[]; categories?: CategoryItem[] }) {
   const [activeCategory, setActiveCategory] = useState<string>(ALL_LABEL)
   const [filtered, setFiltered] = useState<Project[]>([])
+  const [visible, setVisible] = useState<Project[]>([])
+  const [page, setPage] = useState(1)
 
   const sectionRef = useRef<HTMLElement>(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
 
   useEffect(() => {
-    if (activeCategory === ALL_LABEL) {
-      setFiltered(projects)
-    } else {
-      setFiltered(projects.filter((p) => p.category === activeCategory))
-    }
+    const f = activeCategory === ALL_LABEL
+      ? projects
+      : projects.filter((p) => p.category === activeCategory)
+    setFiltered(f)
+    setPage(1)
+    setVisible(f.slice(0, PAGE_SIZE))
   }, [activeCategory, projects])
+
+  const loadMore = () => {
+    const next = page + 1
+    setPage(next)
+    setVisible(filtered.slice(0, next * PAGE_SIZE))
+  }
+
+  const hasMore = visible.length < filtered.length
 
   const activeCategories = categories.filter((c) => c.active)
   const allCategories = [ALL_LABEL, ...activeCategories.map((c) => c.name)]
@@ -36,7 +48,6 @@ export default function PortfolioSection({ projects = [], categories = [] }: { p
       className="relative pt-28 pb-24 md:pt-32 md:pb-32 "
       aria-label="Portfólio"
     >
-      {/* Background */}
       <div className="absolute inset-0 bg-glow-primary opacity-50 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6">
@@ -49,21 +60,9 @@ export default function PortfolioSection({ projects = [], categories = [] }: { p
         >
           <div className="section-label mb-4">Trabalhos</div>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <h2
-              className="section-title"
-              style={{ fontFamily: 'var(--font-manrope)' }}
-            >
-              Meu{' '}
-              <span className="gradient-text">Portfólio</span>
+            <h2 className="section-title" style={{ fontFamily: 'var(--font-manrope)' }}>
+              Meu{' '}<span className="gradient-text">Portfólio</span>
             </h2>
-
-            {/* Tagline */}
-            <div className="max-w-xs flex flex-col gap-3">
-              <div className="w-6 h-px" style={{ background: 'rgba(139,92,246,0.5)' }} />
-              <p style={{ fontFamily: 'var(--font-inter)', fontSize: '13px', fontWeight: 400, lineHeight: '1.8', color: '#71717A', letterSpacing: '0.01em' }}>
-                Cada projeto conta uma história única, capturada com paixão e precisão técnica.
-              </p>
-            </div>
           </div>
         </motion.div>
 
@@ -107,16 +106,32 @@ export default function PortfolioSection({ projects = [], categories = [] }: { p
             transition={{ duration: 0.3 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {filtered.map((project, i) => (
+            {visible.map((project, i) => (
               <ProjectCard key={project.id} project={project} index={i} />
             ))}
           </motion.div>
         </AnimatePresence>
 
-        {/* View All */}
         {filtered.length === 0 && (
           <div className="text-center py-20 text-[#A1A1AA]">
             <p style={{ fontFamily: 'var(--font-inter)' }}>Nenhum projeto nesta categoria ainda.</p>
+          </div>
+        )}
+
+        {/* Load More */}
+        {hasMore && (
+          <div className="flex flex-col items-center gap-3 mt-12">
+            <p className="text-[#555] text-xs" style={{ fontFamily: 'var(--font-inter)' }}>
+              Exibindo {visible.length} de {filtered.length} projetos
+            </p>
+            <button
+              onClick={loadMore}
+              className="flex items-center gap-2 px-6 py-3 rounded-full border border-[rgba(139,92,246,0.3)] text-[#A1A1AA] hover:text-white hover:border-[rgba(139,92,246,0.6)] transition-all duration-300 text-sm"
+              style={{ fontFamily: 'var(--font-inter)', background: 'rgba(139,92,246,0.05)' }}
+            >
+              Carregar mais
+              <ChevronDown size={15} />
+            </button>
           </div>
         )}
       </div>

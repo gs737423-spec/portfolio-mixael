@@ -95,17 +95,17 @@ export interface AboutContent {
 
 export const DEFAULT_SETTINGS: SiteSettings = {
   id: 1,
-  whatsapp: '5511999990000',
+  whatsapp: '5521991838960',
   phone: '',
-  email: 'contato@mixaelsevla.com',
-  instagram_handle: '@mixaelsevla.foto',
-  instagram_url: 'https://instagram.com/mixaelsevla.foto',
+  email: 'contato@mixelsevla.com',
+  instagram_handle: '@mixelsevla.foto',
+  instagram_url: 'https://instagram.com/mixelsevla.foto',
   facebook_url: '',
   tiktok_url: '',
   contact_title: 'Vamos criar algo incrível juntos.',
   contact_subtitle: 'Tem um projeto em mente? Entre em contato e vamos conversar.',
   whatsapp_message: 'Olá! Vim pelo site e gostaria de solicitar um orçamento.',
-  footer_tagline: 'Fotografia & Produção Audiovisual',
+  footer_tagline: 'Fotógrafo e Videomaker',
   updated_at: '',
 }
 

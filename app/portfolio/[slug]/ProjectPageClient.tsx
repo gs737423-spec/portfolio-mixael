@@ -4,18 +4,23 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Calendar, Tag, ExternalLink, X } from 'lucide-react'
+import { ArrowLeft, Calendar, Tag, ExternalLink, X, Play } from 'lucide-react'
 import type { Project } from '@/lib/types'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
-export default function ProjectPageClient({ project }: { project: Project }) {
+const GALLERY_PAGE_SIZE = 12
+
+export default function ProjectPageClient({ project, whatsapp = '5521991838960' }: { project: Project; whatsapp?: string }) {
   const [lightboxImg, setLightboxImg] = useState<string | null>(null)
+  const [visibleCount, setVisibleCount] = useState(GALLERY_PAGE_SIZE)
 
   const allImages = [
     ...(project.cover_image ? [project.cover_image] : []),
     ...project.images,
   ]
+  const visibleImages = allImages.slice(0, visibleCount)
+  const hasMoreImages = visibleCount < allImages.length
 
   const youtubeId = project.youtube_url
     ? project.youtube_url.match(/(?:youtu\.be\/|v=)([^&\s]+)/)?.[1] ?? null
@@ -142,28 +147,56 @@ export default function ProjectPageClient({ project }: { project: Project }) {
                     Galeria
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {allImages.map((img, i) => (
-                      <motion.button
-                        key={i}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: i * 0.05 }}
-                        onClick={() => setLightboxImg(img)}
-                        className="relative aspect-square rounded-lg overflow-hidden group cursor-zoom-in border border-[rgba(139,92,246,0.08)] hover:border-[rgba(139,92,246,0.35)] transition-all duration-300"
-                      >
-                        <Image
-                          src={img}
-                          alt={`${project.title} — foto ${i + 1}`}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          sizes="(max-width: 768px) 50vw, 33vw"
-                        />
-                        <div className="absolute inset-0 bg-[#050505]/0 group-hover:bg-[#050505]/20 transition-colors duration-300 flex items-center justify-center">
-                          <ExternalLink size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        </div>
-                      </motion.button>
-                    ))}
+                    {visibleImages.map((img, i) => {
+                      const isVideo = /\.(mp4|mov|avi|webm)$/i.test(img)
+                      if (isVideo) {
+                        return (
+                          <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-[rgba(139,92,246,0.08)]">
+                            <video
+                              src={img}
+                              controls
+                              preload="metadata"
+                              className="w-full h-full object-cover"
+                              playsInline
+                            />
+                          </div>
+                        )
+                      }
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => setLightboxImg(img)}
+                          className="relative aspect-square rounded-lg overflow-hidden group cursor-zoom-in border border-[rgba(139,92,246,0.08)] hover:border-[rgba(139,92,246,0.35)] transition-all duration-300"
+                        >
+                          <Image
+                            src={img}
+                            alt={`${project.title} — foto ${i + 1}`}
+                            fill
+                            loading={i < 6 ? 'eager' : 'lazy'}
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            sizes="(max-width: 768px) 50vw, 33vw"
+                          />
+                          <div className="absolute inset-0 bg-[#050505]/0 group-hover:bg-[#050505]/20 transition-colors duration-300 flex items-center justify-center">
+                            <ExternalLink size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          </div>
+                        </button>
+                      )
+                    })}
                   </div>
+                  {hasMoreImages && (
+                    <div className="flex flex-col items-center gap-3 mt-8">
+                      <p className="text-[#555] text-xs" style={{ fontFamily: 'var(--font-inter)' }}>
+                        Exibindo {visibleImages.length} de {allImages.length} fotos
+                      </p>
+                      <button
+                        onClick={() => setVisibleCount((c) => c + GALLERY_PAGE_SIZE)}
+                        className="flex items-center gap-2 px-6 py-3 rounded-full border border-[rgba(139,92,246,0.3)] text-[#A1A1AA] hover:text-white hover:border-[rgba(139,92,246,0.6)] transition-all duration-300 text-sm"
+                        style={{ fontFamily: 'var(--font-inter)', background: 'rgba(139,92,246,0.05)' }}
+                      >
+                        Carregar mais fotos
+                      </button>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </div>
@@ -210,7 +243,7 @@ export default function ProjectPageClient({ project }: { project: Project }) {
 
                 <div className="mt-8 pt-6 border-t border-[rgba(139,92,246,0.1)] flex flex-col gap-3">
                   <a
-                    href="https://wa.me/5511999990000"
+                    href={`https://wa.me/${whatsapp}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-primary w-full justify-center text-center"

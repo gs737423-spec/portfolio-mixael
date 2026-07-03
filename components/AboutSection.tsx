@@ -3,23 +3,20 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import Image from 'next/image'
-import { Camera, Film, Award, Users } from 'lucide-react'
+import { Camera, Clapperboard, Video } from 'lucide-react'
 import type { AboutContent } from '@/lib/types'
 import { DEFAULT_ABOUT } from '@/lib/types'
 
-const STAT_ICONS = [Camera, Film, Users, Award]
+const SERVICES = [
+  { icon: Camera, label: 'Fotos' },
+  { icon: Clapperboard, label: 'Reels' },
+  { icon: Video, label: 'Vídeos Institucionais' },
+]
 
 export default function AboutSection({ about }: { about?: AboutContent }) {
   const a = about ?? DEFAULT_ABOUT
   const ref = useRef<HTMLElement>(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
-
-  const stats = [
-    { icon: STAT_ICONS[0], value: a.stat1_value, label: a.stat1_label },
-    { icon: STAT_ICONS[1], value: a.stat2_value, label: a.stat2_label },
-    { icon: STAT_ICONS[2], value: a.stat3_value, label: a.stat3_label },
-    { icon: STAT_ICONS[3], value: a.stat4_value, label: a.stat4_label },
-  ]
 
   const containerVariants = {
     hidden: {},
@@ -144,26 +141,22 @@ export default function AboutSection({ about }: { about?: AboutContent }) {
               </motion.div>
             )}
 
-            {/* Stats */}
+            {/* Serviços */}
             <motion.div
               variants={itemVariants}
-              className="grid grid-cols-4 gap-4 pt-6 border-t border-[rgba(139,92,246,0.1)] mt-2"
+              className="grid grid-cols-3 gap-4 pt-6 border-t border-[rgba(139,92,246,0.1)] mt-2"
             >
-              {stats.map(({ icon: Icon, value, label }) => (
+              {SERVICES.map(({ icon: Icon, label }) => (
                 <div key={label} className="text-center group">
-                  <Icon
-                    size={18}
-                    className="mx-auto mb-2 text-[#8B5CF6] group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <div
-                    className="font-display font-800 text-xl text-white"
-                    style={{ fontFamily: 'var(--font-manrope)', fontWeight: 800 }}
-                  >
-                    {value}
+                  <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-[rgba(139,92,246,0.1)] border border-[rgba(139,92,246,0.2)] flex items-center justify-center group-hover:bg-[rgba(139,92,246,0.2)] group-hover:border-[rgba(139,92,246,0.4)] transition-all duration-300">
+                    <Icon
+                      size={22}
+                      className="text-[#8B5CF6] group-hover:scale-110 transition-transform duration-300"
+                    />
                   </div>
                   <div
-                    className="text-[10px] text-[#A1A1AA] mt-1 tracking-wide uppercase"
-                    style={{ fontFamily: 'var(--font-inter)' }}
+                    className="text-xs text-[#A1A1AA] tracking-wide uppercase"
+                    style={{ fontFamily: 'var(--font-inter)', fontWeight: 500 }}
                   >
                     {label}
                   </div>

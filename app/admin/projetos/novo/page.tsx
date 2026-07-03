@@ -8,9 +8,10 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import {
   ArrowLeft, Upload, X, Plus, Image as ImageIcon,
-  Youtube, FileText, Tag, Calendar, Eye
+  Youtube, FileText, Tag, Calendar, Eye, Play
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { uploadFile as uploadToR2, uploadFiles as uploadFilesToR2 } from '@/lib/upload'
 import { slugify } from '@/lib/utils'
 import type { AdminProjectForm, CategoryItem } from '@/lib/types'
 
@@ -24,6 +25,7 @@ export default function NovoProjetoPage() {
   const [photoFiles, setPhotoFiles] = useState<File[]>([])
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null)
   const [categories, setCategories] = useState<CategoryItem[]>([])
 
   useEffect(() => {
@@ -62,14 +64,6 @@ export default function NovoProjetoPage() {
     setPhotoPreviews((prev) => prev.filter((_, idx) => idx !== i))
   }
 
-  const uploadFile = async (file: File, path: string): Promise<string> => {
-    const { data, error } = await supabase.storage
-      .from('portfolio')
-      .upload(path, file, { upsert: true })
-    if (error) throw error
-    const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(data.path)
-    return publicUrl
-  }
 
   const onSubmit = async (formData: AdminProjectForm) => {
     setSaving(true)
@@ -79,12 +73,18 @@ export default function NovoProjetoPage() {
       const imageUrls: string[] = []
 
       if (coverFile) {
-        coverUrl = await uploadFile(coverFile, `${slug}/cover-${Date.now()}-${coverFile.name}`)
+        setUploadProgress({ done: 0, total: photoFiles.length + 1 })
+        coverUrl = await uploadToR2(coverFile, `projects/${slug}`)
+        setUploadProgress({ done: 1, total: photoFiles.length + 1 })
       }
 
-      for (const file of photoFiles) {
-        const url = await uploadFile(file, `${slug}/${Date.now()}-${file.name}`)
-        imageUrls.push(url)
+      if (photoFiles.length > 0) {
+        const urls = await uploadFilesToR2(
+          photoFiles,
+          `projects/${slug}`,
+          (done) => setUploadProgress({ done: done + (coverFile ? 1 : 0), total: photoFiles.length + (coverFile ? 1 : 0) }),
+        )
+        imageUrls.push(...urls)
       }
 
       const { error } = await supabase.from('projects').insert({
@@ -304,28 +304,37 @@ export default function NovoProjetoPage() {
               {/* Gallery */}
               <div>
                 <label className="block text-sm text-[#A1A1AA] mb-3 font-500" style={{ fontFamily: 'var(--font-inter)' }}>
-                  Galeria de fotos
-                  <span className="text-[#555] ml-1 text-xs">(opcional — pode adicionar várias)</span>
+                  Galeria de fotos e vídeos
+                  <span className="text-[#555] ml-1 text-xs">(opcional — pode adicionar vários)</span>
                 </label>
                 <div className="grid grid-cols-3 gap-3">
-                  {photoPreviews.map((src, i) => (
-                    <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
-                      <Image src={src} alt={`Foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
-                      <button
-                        type="button"
-                        onClick={() => removePhoto(i)}
-                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
-                      >
-                        <X size={10} />
-                      </button>
-                    </div>
-                  ))}
+                  {photoPreviews.map((src, i) => {
+                    const isVideo = photoFiles[i]?.type?.startsWith('video/')
+                    return (
+                      <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
+                        {isVideo ? (
+                          <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center">
+                            <Play size={24} className="text-[#8B5CF6]" />
+                          </div>
+                        ) : (
+                          <Image src={src} alt={`Foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removePhoto(i)}
+                          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                        >
+                          <X size={10} />
+                        </button>
+                      </div>
+                    )
+                  })}
                   <label className="cursor-pointer aspect-square rounded-lg border-2 border-dashed border-[rgba(139,92,246,0.2)] flex flex-col items-center justify-center hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.04)] transition-all bg-[#111]">
                     <Plus size={20} className="text-[#8B5CF6]" />
                     <span className="text-[#555] text-[10px] mt-1" style={{ fontFamily: 'var(--font-inter)' }}>Adicionar</span>
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/*,video/*"
                       multiple
                       onChange={handlePhotosChange}
                       className="hidden"
@@ -428,7 +437,9 @@ export default function NovoProjetoPage() {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      Salvando...
+                      {uploadProgress
+                        ? `Enviando ${uploadProgress.done}/${uploadProgress.total} fotos...`
+                        : 'Salvando...'}
                     </span>
                   ) : '✓ Publicar projeto'}
                 </button>

@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase'
 import type { Project } from '@/lib/types'
 import { DEMO_PROJECTS_DATA } from '@/lib/demoData'
 import { slugify } from '@/lib/utils'
+import { deleteFiles } from '@/lib/upload'
 
 type ViewFilter = 'all' | 'published' | 'draft' | 'archived'
 
@@ -79,8 +80,14 @@ export default function AdminDashboardPage() {
   const deleteProject = async (id: string) => {
     if (!confirm('Excluir permanentemente? Esta ação não pode ser desfeita.')) return
     setDeleting(id)
+    const project = projects.find((p) => p.id === id)
     const { error } = await supabase.from('projects').delete().eq('id', id)
     if (error) { toast.error('Erro ao excluir.'); setDeleting(null); return }
+    if (project) {
+      const urls = [...(project.images ?? [])]
+      if (project.cover_image) urls.push(project.cover_image)
+      if (urls.length > 0) deleteFiles(urls)
+    }
     setProjects((prev) => prev.filter((p) => p.id !== id))
     toast.success('Projeto excluído.')
     setDeleting(null)

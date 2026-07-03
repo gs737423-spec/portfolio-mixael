@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { Upload, X, Plus, Loader2, Save } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { uploadFile as uploadToR2 } from '@/lib/upload'
 import type { AboutContent } from '@/lib/types'
 import { DEFAULT_ABOUT } from '@/lib/types'
 
@@ -28,14 +29,6 @@ export default function SobrePage() {
         name: about.name,
         bio_paragraph1: about.bio_paragraph1,
         bio_paragraph2: about.bio_paragraph2,
-        stat1_value: about.stat1_value,
-        stat1_label: about.stat1_label,
-        stat2_value: about.stat2_value,
-        stat2_label: about.stat2_label,
-        stat3_value: about.stat3_value,
-        stat3_label: about.stat3_label,
-        stat4_value: about.stat4_value,
-        stat4_label: about.stat4_label,
         experience_years: about.experience_years,
       })
       setPhotoPreview(about.photo)
@@ -60,14 +53,7 @@ export default function SobrePage() {
       let photoUrl = photoPreview
 
       if (photoFile) {
-        const ext = photoFile.name.split('.').pop()
-        const path = `site/about.${ext}`
-        const { data: up, error } = await supabase.storage
-          .from('portfolio')
-          .upload(path, photoFile, { upsert: true })
-        if (error) throw error
-        const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(up.path)
-        photoUrl = publicUrl
+        photoUrl = await uploadToR2(photoFile, 'site')
       }
 
       const { error } = await supabase.from('about_content').upsert({
@@ -101,7 +87,7 @@ export default function SobrePage() {
             Seção Sobre
           </h1>
           <p className="text-[#555] text-xs mt-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
-            Edite sua foto, bio e estatísticas
+            Edite sua foto e bio
           </p>
         </div>
       </div>
@@ -220,33 +206,6 @@ export default function SobrePage() {
                 <Plus size={16} />
               </button>
             </div>
-          </div>
-
-          {/* Estatísticas */}
-          <div>
-            <label className="block text-sm text-[#A1A1AA] mb-3 font-500" style={{ fontFamily: 'var(--font-inter)' }}>
-              Estatísticas
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              {([1, 2, 3, 4] as const).map((n) => (
-                <div key={n} className="flex gap-2 items-center">
-                  <input
-                    {...register(`stat${n}_value` as keyof AboutForm)}
-                    placeholder="500+"
-                    className="admin-input w-20 text-center"
-                    style={{ fontFamily: 'var(--font-manrope)', fontWeight: 700 }}
-                  />
-                  <input
-                    {...register(`stat${n}_label` as keyof AboutForm)}
-                    placeholder="Projetos"
-                    className="admin-input flex-1"
-                  />
-                </div>
-              ))}
-            </div>
-            <p className="text-[#555] text-xs mt-2" style={{ fontFamily: 'var(--font-inter)' }}>
-              Formato: valor (500+) + descrição (Projetos realizados)
-            </p>
           </div>
 
           <button

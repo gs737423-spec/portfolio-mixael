@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { ArrowLeft, Upload, X } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { uploadFile } from '@/lib/upload'
 import { slugify } from '@/lib/utils'
 
 interface ClientForm {
@@ -41,14 +42,7 @@ export default function NovoClientePage() {
       let coverUrl: string | null = null
 
       if (coverFile) {
-        const ext = coverFile.name.split('.').pop()
-        const path = `clients/${data.slug}/cover.${ext}`
-        const { data: up, error } = await supabase.storage
-          .from('portfolio')
-          .upload(path, coverFile, { upsert: true })
-        if (error) throw error
-        const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(up.path)
-        coverUrl = publicUrl
+        coverUrl = await uploadFile(coverFile, `clients/${data.slug}`)
       }
 
       const { error } = await supabase.from('clients').insert({

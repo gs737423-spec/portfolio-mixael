@@ -99,7 +99,7 @@ export default function Navigation() {
                     textTransform: 'uppercase',
                   }}
                 >
-                  Fotógrafo
+                  Fotógrafo e Videomaker
                 </span>
               </div>
             </Link>

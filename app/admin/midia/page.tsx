@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { Upload, Trash2, Copy, Loader2, Image as ImageIcon, FileVideo, X } from 'lucide-react'
-import { supabase, getPublicImageUrl } from '@/lib/supabase'
+import { uploadFiles, deleteFiles } from '@/lib/upload'
+import { supabase } from '@/lib/supabase'
 
 interface MediaItem {
+  id: string
   name: string
   url: string
   size: number
@@ -24,63 +26,72 @@ export default function MidiaPage() {
   const [files, setFiles] = useState<MediaItem[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [selected, setSelected] = useState<MediaItem | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const loadFiles = useCallback(async () => {
-    const { data, error } = await supabase.storage.from('portfolio').list('media', {
-      sortBy: { column: 'created_at', order: 'desc' },
-    })
+  const loadFiles = async () => {
+    const { data, error } = await supabase
+      .from('media_files')
+      .select('*')
+      .order('created_at', { ascending: false })
     if (!error && data) {
-      const items: MediaItem[] = data
-        .filter((f) => f.name !== '.emptyFolderPlaceholder')
-        .map((f) => ({
+      setFiles(
+        data.map((f: any) => ({
+          id: f.id,
           name: f.name,
-          url: getPublicImageUrl(`media/${f.name}`),
-          size: f.metadata?.size ?? 0,
+          url: f.url,
+          size: f.size ?? 0,
           created_at: f.created_at ?? '',
           type: f.name.match(/\.(mp4|mov|avi|webm)$/i) ? 'video' : 'image',
-        }))
-      setFiles(items)
+        })),
+      )
     }
     setLoading(false)
-  }, [])
+  }
 
-  useEffect(() => {
-    loadFiles()
-  }, [loadFiles])
+  useEffect(() => { loadFiles() }, [])
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadFiles = Array.from(e.target.files ?? [])
-    if (!uploadFiles.length) return
+    const inputFiles = Array.from(e.target.files ?? [])
+    if (!inputFiles.length) return
     setUploading(true)
+    setUploadProgress({ done: 0, total: inputFiles.length })
 
-    let success = 0
-    for (const file of uploadFiles) {
-      const ext = file.name.split('.').pop()
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { error } = await supabase.storage
-        .from('portfolio')
-        .upload(`media/${fileName}`, file, { cacheControl: '3600', upsert: false })
-      if (!error) success++
+    try {
+      const urls = await uploadFiles(inputFiles, 'media', (done, total) => {
+        setUploadProgress({ done, total })
+      })
+
+      const inserts = inputFiles.map((file, i) => ({
+        name: file.name,
+        url: urls[i],
+        size: file.size,
+      }))
+      await supabase.from('media_files').insert(inserts)
+
+      toast.success(`${urls.length} arquivo${urls.length > 1 ? 's' : ''} enviado${urls.length > 1 ? 's' : ''}!`)
+      loadFiles()
+    } catch {
+      toast.error('Erro ao enviar arquivos.')
+    } finally {
+      setUploading(false)
+      setUploadProgress(null)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
-
-    toast.success(`${success} arquivo${success > 1 ? 's' : ''} enviado${success > 1 ? 's' : ''}!`)
-    setUploading(false)
-    if (fileInputRef.current) fileInputRef.current.value = ''
-    loadFiles()
   }
 
   const handleDelete = async (item: MediaItem) => {
     if (!confirm(`Excluir "${item.name}"?`)) return
     setDeleting(item.name)
-    const { error } = await supabase.storage.from('portfolio').remove([`media/${item.name}`])
-    if (!error) {
+    try {
+      await deleteFiles([item.url])
+      await supabase.from('media_files').delete().eq('id', item.id)
+      setFiles((prev) => prev.filter((f) => f.id !== item.id))
+      if (selected?.id === item.id) setSelected(null)
       toast.success('Arquivo excluído.')
-      setFiles((prev) => prev.filter((f) => f.name !== item.name))
-      if (selected?.name === item.name) setSelected(null)
-    } else {
+    } catch {
       toast.error('Erro ao excluir.')
     }
     setDeleting(null)
@@ -107,7 +118,10 @@ export default function MidiaPage() {
 
           <label className="btn-primary cursor-pointer flex items-center gap-2" style={{ padding: '10px 20px', fontSize: '13px' }}>
             {uploading ? (
-              <><Loader2 size={15} className="animate-spin" /> Enviando...</>
+              <>
+                <Loader2 size={15} className="animate-spin" />
+                {uploadProgress ? `${uploadProgress.done}/${uploadProgress.total}` : 'Enviando...'}
+              </>
             ) : (
               <><Upload size={15} /> Enviar arquivos</>
             )}
@@ -152,13 +166,13 @@ export default function MidiaPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {files.map((file) => (
               <div
-                key={file.name}
+                key={file.id}
                 className={`group relative rounded-xl overflow-hidden bg-[#111] border cursor-pointer transition-all duration-200 ${
-                  selected?.name === file.name
+                  selected?.id === file.id
                     ? 'border-[#8B5CF6] shadow-[0_0_16px_rgba(139,92,246,0.3)]'
                     : 'border-[rgba(139,92,246,0.08)] hover:border-[rgba(139,92,246,0.25)]'
                 }`}
-                onClick={() => setSelected(selected?.name === file.name ? null : file)}
+                onClick={() => setSelected(selected?.id === file.id ? null : file)}
               >
                 <div className="aspect-square relative">
                   {file.type === 'image' ? (

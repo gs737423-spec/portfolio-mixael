@@ -10,6 +10,7 @@ import {
   Camera, Film, Video, Save, Link as LinkIcon, FolderOpen, Loader2,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { uploadFile } from '@/lib/upload'
 import type { Client, ClientMedia, Project } from '@/lib/types'
 
 interface ClientForm {
@@ -62,12 +63,7 @@ export default function EditClientePage({ params }: { params: Promise<{ id: stri
     try {
       let coverUrl = coverPreview
       if (coverFile) {
-        const ext = coverFile.name.split('.').pop()
-        const path = `clients/${data.slug}/cover.${ext}`
-        const { data: up, error } = await supabase.storage.from('portfolio').upload(path, coverFile, { upsert: true })
-        if (error) throw error
-        const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(up.path)
-        coverUrl = publicUrl
+        coverUrl = await uploadFile(coverFile, `clients/${data.slug}`)
       }
       const { error } = await supabase.from('clients').update({
         name: data.name, slug: data.slug, description: data.description || null,
@@ -318,25 +314,13 @@ function VideoUploadSection({
       const ext = videoFile.name.split('.').pop()
       const videoPath = `clients/${clientId}/${type}/${ts}.${ext}`
 
-      // Upload do vídeo
-      const { data: vUp, error: vErr } = await supabase.storage
-        .from('portfolio')
-        .upload(videoPath, videoFile, { upsert: true })
-      if (vErr) throw vErr
-      const { data: { publicUrl: videoUrl } } = supabase.storage.from('portfolio').getPublicUrl(vUp.path)
+      // Upload do vídeo via R2
+      const videoUrl = await uploadFile(videoFile, `clients/${clientId}/${type}`)
 
       // Upload da thumbnail (opcional)
       let thumbUrl: string | null = null
       if (thumbFile) {
-        const tExt = thumbFile.name.split('.').pop()
-        const thumbPath = `clients/${clientId}/${type}/${ts}_thumb.${tExt}`
-        const { data: tUp, error: tErr } = await supabase.storage
-          .from('portfolio')
-          .upload(thumbPath, thumbFile, { upsert: true })
-        if (!tErr && tUp) {
-          const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(tUp.path)
-          thumbUrl = publicUrl
-        }
+        thumbUrl = await uploadFile(thumbFile, `clients/${clientId}/${type}/thumbs`)
       }
 
       const { error } = await supabase.from('client_media').insert({

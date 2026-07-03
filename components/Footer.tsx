@@ -46,7 +46,7 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
                   textTransform: 'uppercase',
                 }}
               >
-                {s.footer_tagline || 'Fotografia & Produção Audiovisual'}
+                {s.footer_tagline || 'Fotógrafo e Videomaker'}
               </span>
             </div>
           </div>
