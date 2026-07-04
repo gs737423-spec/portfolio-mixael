@@ -246,9 +246,14 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
                 return (
                   <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
                     {isVideo ? (
-                      <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center">
-                        <Play size={24} className="text-[#8B5CF6]" />
-                      </div>
+                      <>
+                        <video src={src} muted preload="metadata" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center">
+                            <Play size={18} className="text-white ml-0.5" />
+                          </div>
+                        </div>
+                      </>
                     ) : (
                       <Image src={src} alt={`Foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
                     )}
@@ -258,7 +263,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
                         setRemovedImages((prev) => [...prev, src])
                         setExistingImages((prev) => prev.filter((_, idx) => idx !== i))
                       }}
-                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors z-10"
                     >
                       <X size={10} />
                     </button>
@@ -270,9 +275,14 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
                 return (
                   <div key={`new-${i}`} className="relative aspect-square rounded-lg overflow-hidden ring-2 ring-[#8B5CF6]/50">
                     {isVideo ? (
-                      <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center">
-                        <Play size={24} className="text-[#8B5CF6]" />
-                      </div>
+                      <>
+                        <video src={src} muted preload="metadata" className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center">
+                            <Play size={18} className="text-white ml-0.5" />
+                          </div>
+                        </div>
+                      </>
                     ) : (
                       <Image src={src} alt={`Nova foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
                     )}
@@ -282,7 +292,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
                         setNewPhotos((prev) => prev.filter((_, idx) => idx !== i))
                         setNewPhotoPreviews((prev) => prev.filter((_, idx) => idx !== i))
                       }}
-                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-600 transition-colors z-10"
                     >
                       <X size={10} />
                     </button>
