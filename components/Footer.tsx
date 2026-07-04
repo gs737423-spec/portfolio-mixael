@@ -14,8 +14,6 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
       {/* Top glow line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[rgba(139,92,246,0.35)] to-transparent" />
 
-      {/* Ambient orb */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-[#8B5CF6] opacity-[0.04] blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-10">
 
