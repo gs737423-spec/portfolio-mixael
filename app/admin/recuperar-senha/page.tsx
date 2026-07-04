@@ -48,7 +48,7 @@ export default function RecuperarSenhaPage() {
             Recuperar senha
           </h1>
           <p className="text-[#A1A1AA] text-sm mt-1" style={{ fontFamily: 'var(--font-inter)' }}>
-            Mixelsevla — Fotografia
+            Mixel Sevla — Fotografia
           </p>
         </div>
 

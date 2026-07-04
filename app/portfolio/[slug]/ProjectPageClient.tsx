@@ -146,22 +146,32 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
                   >
                     Galeria
                   </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {visibleImages.map((img, i) => {
-                      const isVideo = /\.(mp4|mov|avi|webm)$/i.test(img)
-                      if (isVideo) {
+                  {/* Videos */}
+                  {visibleImages.filter((img) => /\.(mp4|mov|avi|webm)$/i.test(img)).length > 0 && (
+                    <div className="grid grid-cols-1 gap-4 mb-6">
+                      {visibleImages.map((img, i) => {
+                        if (!/\.(mp4|mov|avi|webm)$/i.test(img)) return null
                         return (
-                          <div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-[rgba(139,92,246,0.08)]">
+                          <div key={`video-${i}`} className="relative aspect-video rounded-xl overflow-hidden border border-[rgba(139,92,246,0.15)] bg-black">
                             <video
                               src={img}
                               controls
                               preload="metadata"
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain"
                               playsInline
+                              controlsList="nodownload"
+                              style={{ maxHeight: '70vh' }}
                             />
                           </div>
                         )
-                      }
+                      })}
+                    </div>
+                  )}
+
+                  {/* Photos */}
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {visibleImages.map((img, i) => {
+                      if (/\.(mp4|mov|avi|webm)$/i.test(img)) return null
                       return (
                         <button
                           key={i}

@@ -34,7 +34,7 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
                   letterSpacing: '-0.02em',
                 }}
               >
-                Mixelsevla
+                Mixel Sevla
               </span>
               <span
                 className="text-[#555]"
@@ -81,7 +81,7 @@ export default function Footer({ settings }: { settings?: SiteSettings }) {
               lineHeight: 1.7,
             }}
           >
-            © {year} Mixelsevla.{' '}
+            © {year} Mixel Sevla.{' '}
             <span className="text-[#333]">Todos os direitos reservados.</span>
             <br />
             <Link

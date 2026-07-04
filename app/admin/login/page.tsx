@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
             className="text-2xl text-white mb-1"
             style={{ fontFamily: 'var(--font-sora), Sora, sans-serif', fontWeight: 700, letterSpacing: '-0.02em' }}
           >
-            Mixelsevla
+            Mixel Sevla
           </h1>
           <p
             className="text-[#444] text-xs tracking-[0.18em] uppercase"
