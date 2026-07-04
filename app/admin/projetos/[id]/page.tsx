@@ -6,7 +6,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { ArrowLeft, Upload, X, Plus, Save, Loader2, Play } from 'lucide-react'
+import { ArrowLeft, Upload, X, Plus, Save, Loader2 } from 'lucide-react'
+import VideoThumb from '@/components/VideoThumb'
 import { supabase } from '@/lib/supabase'
 import { uploadFile as uploadToR2, uploadFiles as uploadFilesToR2, deleteFiles } from '@/lib/upload'
 import type { AdminProjectForm, Project, CategoryItem } from '@/lib/types'
@@ -246,14 +247,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
                 return (
                   <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
                     {isVideo ? (
-                      <>
-                        <video src={src} muted preload="metadata" className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center">
-                            <Play size={18} className="text-white ml-0.5" />
-                          </div>
-                        </div>
-                      </>
+                      <VideoThumb src={src} className="w-full h-full" />
                     ) : (
                       <Image src={src} alt={`Foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
                     )}
@@ -275,14 +269,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
                 return (
                   <div key={`new-${i}`} className="relative aspect-square rounded-lg overflow-hidden ring-2 ring-[#8B5CF6]/50">
                     {isVideo ? (
-                      <>
-                        <video src={src} muted preload="metadata" className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center">
-                            <Play size={18} className="text-white ml-0.5" />
-                          </div>
-                        </div>
-                      </>
+                      <VideoThumb src={src} className="w-full h-full" />
                     ) : (
                       <Image src={src} alt={`Nova foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
                     )}

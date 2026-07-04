@@ -4,8 +4,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowLeft, Calendar, Tag, ExternalLink, X, Play } from 'lucide-react'
+import { ArrowLeft, Calendar, Tag, ExternalLink, X } from 'lucide-react'
 import type { Project } from '@/lib/types'
+import VideoPlayer from '@/components/VideoPlayer'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
@@ -152,17 +153,7 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
                       {visibleImages.map((img, i) => {
                         if (!/\.(mp4|mov|avi|webm)$/i.test(img)) return null
                         return (
-                          <div key={`video-${i}`} className="relative aspect-video rounded-xl overflow-hidden border border-[rgba(139,92,246,0.15)] bg-black">
-                            <video
-                              src={img}
-                              controls
-                              preload="metadata"
-                              className="w-full h-full object-contain"
-                              playsInline
-                              controlsList="nodownload"
-                              style={{ maxHeight: '70vh' }}
-                            />
-                          </div>
+                          <VideoPlayer key={`video-${i}`} src={img} />
                         )
                       })}
                     </div>

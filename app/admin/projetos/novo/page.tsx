@@ -8,11 +8,12 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import {
   ArrowLeft, Upload, X, Plus, Image as ImageIcon,
-  Youtube, FileText, Tag, Calendar, Eye, Play
+  Youtube, FileText, Tag, Calendar, Eye
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { uploadFile as uploadToR2, uploadFiles as uploadFilesToR2 } from '@/lib/upload'
 import { slugify } from '@/lib/utils'
+import VideoThumb from '@/components/VideoThumb'
 import type { AdminProjectForm, CategoryItem } from '@/lib/types'
 
 const STEPS = ['Informações', 'Imagens', 'Publicar']
@@ -313,14 +314,7 @@ export default function NovoProjetoPage() {
                     return (
                       <div key={i} className="relative aspect-square rounded-lg overflow-hidden">
                         {isVideo ? (
-                          <>
-                            <video src={src} muted preload="metadata" className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                              <div className="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center">
-                                <Play size={18} className="text-white ml-0.5" />
-                              </div>
-                            </div>
-                          </>
+                          <VideoThumb src={src} className="w-full h-full" />
                         ) : (
                           <Image src={src} alt={`Foto ${i + 1}`} fill className="object-cover" sizes="33vw" />
                         )}
