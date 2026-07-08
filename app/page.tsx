@@ -14,7 +14,7 @@ async function fetchAll() {
     const supabase = await createSupabaseServerClient()
 
     const [projectsRes, settingsRes, aboutRes, categoriesRes] = await Promise.all([
-      supabase.from('projects').select('id,title,slug,category,cover_image,short_description,date,youtube_url,published,display_order').eq('published', true).order('display_order', { ascending: true }).order('date', { ascending: false }),
+      supabase.from('projects').select('id,title,slug,category,tags,cover_image,short_description,date,youtube_url,video_urls,published,display_order').eq('published', true).order('display_order', { ascending: true }).order('date', { ascending: false }),
       supabase.from('site_settings').select('*').eq('id', 1).single(),
       supabase.from('about_content').select('*').eq('id', 1).single(),
       supabase.from('categories').select('*').eq('active', true).order('display_order', { ascending: true }),

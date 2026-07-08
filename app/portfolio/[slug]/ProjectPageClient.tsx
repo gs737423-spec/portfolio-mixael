@@ -1,16 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowLeft, Calendar, Tag, ExternalLink, X } from 'lucide-react'
-import type { Project } from '@/lib/types'
+import type { Project, VideoLink } from '@/lib/types'
 import VideoPlayer from '@/components/VideoPlayer'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
 const GALLERY_PAGE_SIZE = 12
+
+function extractYoutubeId(url: string): string | null {
+  return url.match(/(?:youtu\.be\/|v=)([^&\s]+)/)?.[1] ?? null
+}
 
 export default function ProjectPageClient({ project, whatsapp = '5521991838960' }: { project: Project; whatsapp?: string }) {
   const [lightboxImg, setLightboxImg] = useState<string | null>(null)
@@ -23,9 +27,16 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
   const visibleImages = allImages.slice(0, visibleCount)
   const hasMoreImages = visibleCount < allImages.length
 
-  const youtubeId = project.youtube_url
-    ? project.youtube_url.match(/(?:youtu\.be\/|v=)([^&\s]+)/)?.[1] ?? null
-    : null
+  // Merge video_urls with legacy youtube_url for backward compat
+  const videos: VideoLink[] = useMemo(() => {
+    if (project.video_urls && Array.isArray(project.video_urls) && project.video_urls.length > 0) {
+      return project.video_urls
+    }
+    if (project.youtube_url) {
+      return [{ title: '', url: project.youtube_url }]
+    }
+    return []
+  }, [project.video_urls, project.youtube_url])
 
   return (
     <>
@@ -65,6 +76,15 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
               </Link>
               <div className="flex flex-wrap items-center gap-3 mb-4">
                 <span className="category-badge">{project.category}</span>
+                {project.tags && project.tags.length > 0 && project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="category-badge"
+                    style={{ background: 'rgba(139,92,246,0.1)', borderColor: 'rgba(139,92,246,0.2)' }}
+                  >
+                    {tag}
+                  </span>
+                ))}
                 {project.date && (
                   <span className="flex items-center gap-1.5 text-[#A1A1AA] text-xs" style={{ fontFamily: 'var(--font-inter)' }}>
                     <Calendar size={12} />
@@ -93,61 +113,82 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
             <div className="lg:col-span-2">
               {/* Description */}
               {project.description && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="mb-12"
-                >
+                <div className="mb-12">
                   <p
                     className="text-[#A1A1AA] text-lg leading-relaxed"
                     style={{ fontFamily: 'var(--font-inter)' }}
                   >
                     {project.description}
                   </p>
-                </motion.div>
+                </div>
               )}
 
-              {/* YouTube Video */}
-              {youtubeId && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
-                  className="mb-12"
-                >
+              {/* Videos */}
+              {videos.length > 0 && (
+                <div className="mb-12">
                   <h2
-                    className="font-display font-600 text-white text-xl mb-4"
+                    className="font-display font-600 text-white text-xl mb-6"
                     style={{ fontFamily: 'var(--font-manrope)' }}
                   >
-                    Vídeo
+                    {videos.length === 1 ? 'Vídeo' : 'Vídeos'}
                   </h2>
-                  <div className="relative aspect-video rounded-xl overflow-hidden border border-[rgba(139,92,246,0.2)]">
-                    <iframe
-                      src={`https://www.youtube.com/embed/${youtubeId}?rel=0`}
-                      title={project.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="absolute inset-0 w-full h-full"
-                    />
+                  <div className="flex flex-col gap-6">
+                    {videos.map((video, i) => {
+                      const ytId = extractYoutubeId(video.url)
+                      return (
+                        <div key={i}>
+                          {video.title && (
+                            <h3 className="text-white text-sm font-500 mb-2" style={{ fontFamily: 'var(--font-inter)' }}>
+                              {video.title}
+                            </h3>
+                          )}
+                          {ytId ? (
+                            <div className="relative aspect-video rounded-xl overflow-hidden border border-[rgba(139,92,246,0.2)]">
+                              <iframe
+                                src={`https://www.youtube.com/embed/${ytId}?rel=0`}
+                                title={video.title || `${project.title} - Vídeo ${i + 1}`}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="absolute inset-0 w-full h-full"
+                              />
+                            </div>
+                          ) : /\.(mp4|mov|avi|webm)$/i.test(video.url) ? (
+                            <VideoPlayer src={video.url} />
+                          ) : (
+                            <a
+                              href={video.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-3 p-4 rounded-xl bg-[#111] border border-[rgba(139,92,246,0.15)] hover:border-[rgba(139,92,246,0.4)] transition-colors group"
+                            >
+                              <ExternalLink size={18} className="text-[#8B5CF6] flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <span className="text-white text-sm group-hover:text-[#C084FC] transition-colors truncate block" style={{ fontFamily: 'var(--font-inter)' }}>
+                                  {video.title || 'Assistir vídeo externo'}
+                                </span>
+                                <span className="text-[#555] text-xs truncate block" style={{ fontFamily: 'var(--font-inter)' }}>
+                                  {video.url}
+                                </span>
+                              </div>
+                            </a>
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {/* Photo Gallery */}
               {allImages.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
+                <div>
                   <h2
                     className="font-display font-600 text-white text-xl mb-6"
                     style={{ fontFamily: 'var(--font-manrope)' }}
                   >
                     Galeria
                   </h2>
-                  {/* Videos */}
+                  {/* Uploaded videos in gallery */}
                   {visibleImages.filter((img) => /\.(mp4|mov|avi|webm)$/i.test(img)).length > 0 && (
                     <div className="grid grid-cols-1 gap-4 mb-6">
                       {visibleImages.map((img, i) => {
@@ -198,16 +239,13 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
                       </button>
                     </div>
                   )}
-                </motion.div>
+                </div>
               )}
             </div>
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.3 }}
+              <div
                 className="glass rounded-xl p-6 border border-[rgba(139,92,246,0.15)] sticky top-28"
               >
                 <h3
@@ -218,28 +256,53 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
                 </h3>
 
                 <div className="flex flex-col gap-4">
-                  {[
-                    { icon: Tag, label: 'Categoria', value: project.category },
-                    project.date
-                      ? { icon: Calendar, label: 'Data', value: new Intl.DateTimeFormat('pt-BR', { year: 'numeric', month: 'long' }).format(new Date(project.date)) }
-                      : null,
-                  ].filter(Boolean).map((item) => {
-                    if (!item) return null
-                    const Icon = item.icon
-                    return (
-                      <div key={item.label} className="flex items-start gap-3">
-                        <Icon size={16} className="text-[#8B5CF6] mt-0.5 flex-shrink-0" />
-                        <div>
-                          <div className="text-[10px] text-[#555] uppercase tracking-wider mb-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
-                            {item.label}
-                          </div>
-                          <div className="text-white text-sm" style={{ fontFamily: 'var(--font-inter)' }}>
-                            {item.value}
-                          </div>
+                  <div className="flex items-start gap-3">
+                    <Tag size={16} className="text-[#8B5CF6] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="text-[10px] text-[#555] uppercase tracking-wider mb-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
+                        Categoria
+                      </div>
+                      <div className="text-white text-sm" style={{ fontFamily: 'var(--font-inter)' }}>
+                        {project.category}
+                      </div>
+                    </div>
+                  </div>
+
+                  {project.tags && project.tags.length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <Tag size={16} className="text-[#8B5CF6] mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div className="text-[10px] text-[#555] uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-inter)' }}>
+                          Tags
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {project.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="px-2 py-0.5 rounded-full text-[10px] text-[#C084FC] border border-[rgba(139,92,246,0.25)] bg-[rgba(139,92,246,0.08)]"
+                              style={{ fontFamily: 'var(--font-inter)' }}
+                            >
+                              {tag}
+                            </span>
+                          ))}
                         </div>
                       </div>
-                    )
-                  })}
+                    </div>
+                  )}
+
+                  {project.date && (
+                    <div className="flex items-start gap-3">
+                      <Calendar size={16} className="text-[#8B5CF6] mt-0.5 flex-shrink-0" />
+                      <div>
+                        <div className="text-[10px] text-[#555] uppercase tracking-wider mb-0.5" style={{ fontFamily: 'var(--font-inter)' }}>
+                          Data
+                        </div>
+                        <div className="text-white text-sm" style={{ fontFamily: 'var(--font-inter)' }}>
+                          {new Intl.DateTimeFormat('pt-BR', { year: 'numeric', month: 'long' }).format(new Date(project.date))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-[rgba(139,92,246,0.1)] flex flex-col gap-3">
@@ -258,7 +321,7 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
                     Ver portfólio completo
                   </Link>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
@@ -266,7 +329,7 @@ export default function ProjectPageClient({ project, whatsapp = '5521991838960' 
 
       <Footer />
 
-      {/* Lightbox — AnimatePresence required for exit animation */}
+      {/* Lightbox */}
       <AnimatePresence>
       {lightboxImg && (
         <motion.div

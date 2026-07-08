@@ -1,13 +1,20 @@
+export interface VideoLink {
+  title: string
+  url: string
+}
+
 export interface Project {
   id: string
   title: string
   slug: string
   category: string
+  tags: string[]
   description: string | null
   short_description: string | null
   cover_image: string | null
   images: string[]
   youtube_url: string | null
+  video_urls: VideoLink[]
   date: string | null
   display_order: number
   published: boolean
@@ -175,7 +182,6 @@ export interface AdminProjectForm {
   category: string
   description: string
   short_description: string
-  youtube_url: string
   date: string
   display_order: number
   published: boolean

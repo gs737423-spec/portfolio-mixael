@@ -6,11 +6,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { ArrowLeft, Upload, X, Plus, Save, Loader2 } from 'lucide-react'
+import { ArrowLeft, Upload, X, Plus, Save, Loader2, Trash2, Youtube, Tag } from 'lucide-react'
 import VideoThumb from '@/components/VideoThumb'
 import { supabase } from '@/lib/supabase'
 import { uploadFile as uploadToR2, uploadFiles as uploadFilesToR2, deleteFiles } from '@/lib/upload'
-import type { AdminProjectForm, Project, CategoryItem } from '@/lib/types'
+import type { AdminProjectForm, Project, CategoryItem, VideoLink } from '@/lib/types'
+
+const SUGGESTED_TAGS = ['Foto', 'Vídeo', 'Drone', 'Institucional', 'Campanha', 'Evento', 'Museu', 'Exposição', 'Reels']
 
 export default function EditarProjetoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -26,6 +28,9 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
   const [existingImages, setExistingImages] = useState<string[]>([])
   const [removedImages, setRemovedImages] = useState<string[]>([])
   const [categories, setCategories] = useState<CategoryItem[]>([])
+  const [videoLinks, setVideoLinks] = useState<VideoLink[]>([])
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [customTag, setCustomTag] = useState('')
 
   const {
     register,
@@ -58,16 +63,48 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
     setProject(p)
     setExistingImages(p.images ?? [])
     setCoverPreview(p.cover_image)
+    setSelectedTags(p.tags ?? [])
+
+    // Load video_urls, falling back to youtube_url for backward compat
+    const videos: VideoLink[] = (p.video_urls && Array.isArray(p.video_urls) && p.video_urls.length > 0)
+      ? p.video_urls
+      : (p.youtube_url ? [{ title: '', url: p.youtube_url }] : [])
+    setVideoLinks(videos)
+
     reset({
       title: p.title,
       category: p.category,
       description: p.description ?? '',
       short_description: p.short_description ?? '',
-      youtube_url: p.youtube_url ?? '',
       date: p.date ?? '',
       published: p.published,
     })
     setLoading(false)
+  }
+
+  const addVideoLink = () => {
+    setVideoLinks((prev) => [...prev, { title: '', url: '' }])
+  }
+
+  const updateVideoLink = (i: number, field: keyof VideoLink, value: string) => {
+    setVideoLinks((prev) => prev.map((v, idx) => idx === i ? { ...v, [field]: value } : v))
+  }
+
+  const removeVideoLink = (i: number) => {
+    setVideoLinks((prev) => prev.filter((_, idx) => idx !== i))
+  }
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    )
+  }
+
+  const addCustomTag = () => {
+    const tag = customTag.trim()
+    if (!tag || selectedTags.includes(tag)) return
+    setSelectedTags((prev) => [...prev, tag])
+    setCustomTag('')
   }
 
   const onSubmit = async (formData: AdminProjectForm) => {
@@ -90,16 +127,20 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
         )
       }
 
+      const validVideos = videoLinks.filter((v) => v.url.trim())
+
       const { error } = await supabase
         .from('projects')
         .update({
           title: formData.title,
           category: formData.category,
+          tags: selectedTags,
           description: formData.description || null,
           short_description: formData.short_description || null,
           cover_image: coverUrl,
           images: [...existingImages, ...newUrls],
-          youtube_url: formData.youtube_url || null,
+          youtube_url: validVideos[0]?.url || null,
+          video_urls: validVideos,
           date: formData.date || null,
           published: formData.published,
           updated_at: new Date().toISOString(),
@@ -175,6 +216,66 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
             </div>
           </div>
 
+          {/* Tags */}
+          <div>
+            <label className="block text-sm text-[#A1A1AA] mb-2 font-500" style={{ fontFamily: 'var(--font-inter)' }}>
+              <Tag size={14} className="inline mr-1.5" />
+              Tags
+              <span className="text-[#555] ml-1 text-xs">(filtros adicionais)</span>
+            </label>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {SUGGESTED_TAGS.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => toggleTag(tag)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-500 transition-all duration-200 ${
+                    selectedTags.includes(tag)
+                      ? 'bg-[#8B5CF6] text-white shadow-[0_0_8px_rgba(139,92,246,0.4)]'
+                      : 'bg-[#1a1a1a] text-[#A1A1AA] border border-[rgba(139,92,246,0.2)] hover:border-[rgba(139,92,246,0.5)]'
+                  }`}
+                  style={{ fontFamily: 'var(--font-inter)' }}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+            {selectedTags.filter((t) => !SUGGESTED_TAGS.includes(t)).length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {selectedTags.filter((t) => !SUGGESTED_TAGS.includes(t)).map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1.5 rounded-full text-xs font-500 bg-[#8B5CF6] text-white flex items-center gap-1.5"
+                    style={{ fontFamily: 'var(--font-inter)' }}
+                  >
+                    {tag}
+                    <button type="button" onClick={() => toggleTag(tag)} className="hover:text-red-200">
+                      <X size={12} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customTag}
+                onChange={(e) => setCustomTag(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomTag() } }}
+                placeholder="Adicionar tag personalizada..."
+                className="admin-input flex-1 text-sm"
+              />
+              <button
+                type="button"
+                onClick={addCustomTag}
+                disabled={!customTag.trim()}
+                className="px-4 py-2 bg-[#1a1a1a] border border-[rgba(139,92,246,0.2)] rounded-lg text-[#A1A1AA] hover:text-white hover:border-[rgba(139,92,246,0.5)] transition-colors disabled:opacity-40 text-sm"
+              >
+                <Plus size={16} />
+              </button>
+            </div>
+          </div>
+
           <div>
             <label className="block text-sm text-[#A1A1AA] mb-2 font-500" style={{ fontFamily: 'var(--font-inter)' }}>
               Resumo curto
@@ -189,11 +290,58 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
             <textarea {...register('description')} rows={4} className="admin-input resize-none" />
           </div>
 
+          {/* Video Links */}
           <div>
-            <label className="block text-sm text-[#A1A1AA] mb-2 font-500" style={{ fontFamily: 'var(--font-inter)' }}>
-              Link do YouTube
+            <label className="block text-sm text-[#A1A1AA] mb-3 font-500" style={{ fontFamily: 'var(--font-inter)' }}>
+              <Youtube size={14} className="inline mr-1.5 text-red-400" />
+              Vídeos do projeto
+              <span className="text-[#555] ml-1 text-xs">(YouTube ou link externo)</span>
             </label>
-            <input {...register('youtube_url')} type="url" placeholder="https://youtube.com/watch?v=..." className="admin-input" />
+
+            {videoLinks.length > 0 && (
+              <div className="flex flex-col gap-3 mb-3">
+                {videoLinks.map((video, i) => (
+                  <div key={i} className="rounded-xl bg-[#111] border border-[rgba(139,92,246,0.1)] p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[#555] text-xs" style={{ fontFamily: 'var(--font-inter)' }}>
+                        Vídeo {i + 1}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => removeVideoLink(i)}
+                        className="p-1 text-[#555] hover:text-red-400 transition-colors"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={video.title}
+                      onChange={(e) => updateVideoLink(i, 'title', e.target.value)}
+                      placeholder="Título do vídeo (opcional)"
+                      className="admin-input text-sm mb-2"
+                    />
+                    <input
+                      type="url"
+                      value={video.url}
+                      onChange={(e) => updateVideoLink(i, 'url', e.target.value)}
+                      placeholder="https://youtube.com/watch?v=..."
+                      className="admin-input text-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={addVideoLink}
+              className="w-full py-3 rounded-xl border-2 border-dashed border-[rgba(139,92,246,0.2)] text-[#A1A1AA] hover:text-white hover:border-[rgba(139,92,246,0.5)] hover:bg-[rgba(139,92,246,0.04)] transition-all flex items-center justify-center gap-2 text-sm"
+              style={{ fontFamily: 'var(--font-inter)' }}
+            >
+              <Plus size={16} />
+              Adicionar vídeo
+            </button>
           </div>
 
           {/* Cover */}
@@ -331,7 +479,7 @@ export default function EditarProjetoPage({ params }: { params: Promise<{ id: st
               <span className="flex items-center gap-2">
                 <Loader2 size={16} className="animate-spin" />
                 {uploadProgress
-                  ? `Enviando ${uploadProgress.done}/${uploadProgress.total} fotos...`
+                  ? `Enviando ${uploadProgress.done}/${uploadProgress.total}...`
                   : 'Salvando...'}
               </span>
             ) : (
