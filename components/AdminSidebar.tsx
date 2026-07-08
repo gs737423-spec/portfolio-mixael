@@ -136,9 +136,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
       <aside
         className="hidden lg:flex w-56 flex-shrink-0 flex-col sticky top-0 h-screen"
         style={{
-          background: 'rgba(5,5,5,0.82)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
+          background: 'rgba(8,8,8,0.98)',
           borderRight: '1px solid rgba(139,92,246,0.07)',
         }}
       >
@@ -149,7 +147,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
       {open && (
         <div
           className="fixed inset-0 z-40 lg:hidden"
-          style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+          style={{ background: 'rgba(0,0,0,0.6)' }}
           onClick={() => setOpen(false)}
         />
       )}
@@ -160,9 +158,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{
-          background: 'rgba(5,5,5,0.95)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
+          background: 'rgba(5,5,5,0.98)',
           borderRight: '1px solid rgba(139,92,246,0.08)',
         }}
       >
@@ -175,9 +171,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
         <div
           className="lg:hidden flex items-center gap-3 px-4 py-3 sticky top-0 z-30"
           style={{
-            background: 'rgba(5,5,5,0.88)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            background: 'rgba(8,8,8,0.98)',
             borderBottom: '1px solid rgba(139,92,246,0.07)',
           }}
         >

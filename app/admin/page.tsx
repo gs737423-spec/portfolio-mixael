@@ -64,11 +64,13 @@ export default function AdminDashboardPage() {
       title: newTitle,
       slug: newSlug,
       category: project.category,
+      tags: project.tags ?? [],
       description: project.description,
       short_description: project.short_description,
       cover_image: project.cover_image,
       images: project.images,
       youtube_url: project.youtube_url,
+      video_urls: project.video_urls ?? [],
       date: project.date,
       published: false,
     })

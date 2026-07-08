@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
@@ -14,16 +14,36 @@ const navLinks = [
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const progressBarRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false
+    let lastScrolled = false
+
+    const update = () => {
       const y = window.scrollY
-      setScrolled(y > 40)
+      const isScrolled = y > 40
+      if (isScrolled !== lastScrolled) {
+        lastScrolled = isScrolled
+        setScrolled(isScrolled)
+      }
       const total = document.documentElement.scrollHeight - window.innerHeight
-      setScrollProgress(total > 0 ? (y / total) * 100 : 0)
+      const progress = total > 0 ? (y / total) * 100 : 0
+      if (progressBarRef.current) {
+        progressBarRef.current.style.width = `${progress}%`
+      }
+      ticking = false
     }
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(update)
+        ticking = true
+      }
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true })
+    update()
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -48,8 +68,9 @@ export default function Navigation() {
     <>
       {/* Scroll Progress */}
       <div
+        ref={progressBarRef}
         className="scroll-progress"
-        style={{ width: `${scrollProgress}%` }}
+        style={{ width: '0%' }}
         aria-hidden="true"
       />
 
