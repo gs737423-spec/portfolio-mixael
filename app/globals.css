@@ -70,11 +70,7 @@ body {
       rgba(109, 40, 217, 0.08) 55%,
       transparent 80%
     );
-  background-attachment: fixed;
-}
-
-@media (max-width: 768px) {
-  .lux-body { background-attachment: scroll; }
+  background-attachment: scroll;
 }
 
 /* === GRAIN OVERLAY — desativado (estava criando textura irregular) === */

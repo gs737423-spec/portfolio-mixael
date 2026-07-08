@@ -84,7 +84,7 @@ export default function Navigation() {
         <div
           className={`transition-all duration-500 ${
             scrolled
-              ? 'bg-[rgba(5,5,5,0.85)] backdrop-blur-2xl border-b border-[rgba(139,92,246,0.1)] shadow-[0_1px_40px_rgba(0,0,0,0.6)]'
+              ? 'bg-[rgba(5,5,5,0.97)] border-b border-[rgba(139,92,246,0.1)] shadow-[0_1px_40px_rgba(0,0,0,0.6)]'
               : 'bg-transparent'
           }`}
         >
@@ -223,7 +223,7 @@ export default function Navigation() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="fixed inset-0 z-[9970] bg-black/40 backdrop-blur-sm"
+              className="fixed inset-0 z-[9970] bg-black/60"
               onClick={() => setMobileOpen(false)}
             />
 
@@ -235,9 +235,8 @@ export default function Navigation() {
               transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
               className="fixed top-0 right-0 bottom-0 z-[9980] w-[min(320px,85vw)] flex flex-col"
               style={{
-                background: 'rgba(8,8,8,0.97)',
+                background: 'rgba(8,8,8,0.99)',
                 borderLeft: '1px solid rgba(139,92,246,0.12)',
-                backdropFilter: 'blur(40px)',
               }}
             >
               {/* Panel header */}
