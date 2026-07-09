@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
 
@@ -14,9 +13,12 @@ const navLinks = [
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const progressBarRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    setMounted(true)
+
     let ticking = false
     let lastScrolled = false
 
@@ -74,11 +76,10 @@ export default function Navigation() {
         aria-hidden="true"
       />
 
-      <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-[9990]"
+      <header
+        className={`fixed top-0 left-0 right-0 z-[9990] transition-[transform,opacity] duration-700 ease-out ${
+          mounted ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+        }`}
       >
         {/* Glass backdrop */}
         <div
@@ -196,145 +197,117 @@ export default function Navigation() {
                 className="md:hidden flex items-center justify-center w-10 h-10 text-[#A1A1AA] hover:text-white transition-colors rounded-lg hover:bg-white/5"
                 aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
               >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={mobileOpen ? 'close' : 'open'}
-                    initial={{ opacity: 0, rotate: -90, scale: 0.7 }}
-                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                    exit={{ opacity: 0, rotate: 90, scale: 0.7 }}
-                    transition={{ duration: 0.18 }}
-                  >
-                    {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-                  </motion.div>
-                </AnimatePresence>
+                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* ── Mobile Menu ── */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="fixed inset-0 z-[9970] bg-black/60"
-              onClick={() => setMobileOpen(false)}
-            />
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 z-[9970] bg-black/60 transition-opacity duration-250 ${
+          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setMobileOpen(false)}
+      />
 
-            {/* Panel */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
-              className="fixed top-0 right-0 bottom-0 z-[9980] w-[min(320px,85vw)] flex flex-col"
+      {/* Panel */}
+      <div
+        className={`fixed top-0 right-0 bottom-0 z-[9980] w-[min(320px,85vw)] flex flex-col transition-transform duration-350 ease-out ${
+          mobileOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        style={{
+          background: 'rgba(8,8,8,0.99)',
+          borderLeft: '1px solid rgba(139,92,246,0.12)',
+        }}
+      >
+        {/* Panel header */}
+        <div className="flex items-center justify-between px-6 h-16 border-b border-[rgba(139,92,246,0.1)]">
+          <span
+            className="text-[#555]"
+            style={{
+              fontFamily: 'var(--font-inter), Inter, sans-serif',
+              fontSize: '11px',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Menu
+          </span>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="w-8 h-8 flex items-center justify-center text-[#666] hover:text-white transition-colors rounded-md hover:bg-white/5"
+            aria-label="Fechar"
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Links */}
+        <nav className="flex-1 flex flex-col justify-center px-8 gap-2">
+          {navLinks.map((link) => (
+            <button
+              key={link.href}
+              onClick={() => handleNav(link.href)}
+              className="text-left group py-4 border-b border-[rgba(255,255,255,0.04)] cursor-pointer"
+            >
+              <span
+                className="text-white group-hover:text-[#A78BFA] transition-colors duration-200"
+                style={{
+                  fontFamily: 'var(--font-sora), Sora, sans-serif',
+                  fontSize: '26px',
+                  fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.2,
+                  display: 'block',
+                }}
+              >
+                {link.label}
+              </span>
+            </button>
+          ))}
+
+          {/* CTA mobile */}
+          <div className="mt-6">
+            <button
+              onClick={() => handleNav('#contato')}
+              className="w-full flex items-center justify-center gap-2 cursor-pointer"
               style={{
-                background: 'rgba(8,8,8,0.99)',
-                borderLeft: '1px solid rgba(139,92,246,0.12)',
+                padding: '14px 24px',
+                background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                borderRadius: '8px',
+                border: 'none',
+                fontFamily: 'var(--font-sora), Sora, sans-serif',
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                color: '#fff',
+                boxShadow: '0 4px 24px rgba(139,92,246,0.4)',
               }}
             >
-              {/* Panel header */}
-              <div className="flex items-center justify-between px-6 h-16 border-b border-[rgba(139,92,246,0.1)]">
-                <span
-                  className="text-[#555]"
-                  style={{
-                    fontFamily: 'var(--font-inter), Inter, sans-serif',
-                    fontSize: '11px',
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Menu
-                </span>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center text-[#666] hover:text-white transition-colors rounded-md hover:bg-white/5"
-                  aria-label="Fechar"
-                >
-                  <X size={16} />
-                </button>
-              </div>
+              Solicitar Orçamento
+              <ArrowUpRight size={14} />
+            </button>
+          </div>
+        </nav>
 
-              {/* Links */}
-              <nav className="flex-1 flex flex-col justify-center px-8 gap-2">
-                {navLinks.map((link, i) => (
-                  <motion.button
-                    key={link.href}
-                    initial={{ opacity: 0, x: 24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.08 + i * 0.06, ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
-                    onClick={() => handleNav(link.href)}
-                    className="text-left group py-4 border-b border-[rgba(255,255,255,0.04)] cursor-pointer"
-                  >
-                    <span
-                      className="text-white group-hover:text-[#A78BFA] transition-colors duration-200"
-                      style={{
-                        fontFamily: 'var(--font-sora), Sora, sans-serif',
-                        fontSize: '26px',
-                        fontWeight: 600,
-                        letterSpacing: '-0.02em',
-                        lineHeight: 1.2,
-                        display: 'block',
-                      }}
-                    >
-                      {link.label}
-                    </span>
-                  </motion.button>
-                ))}
-
-                {/* CTA mobile */}
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.08 + navLinks.length * 0.06 + 0.05, duration: 0.4 }}
-                  className="mt-6"
-                >
-                  <button
-                    onClick={() => handleNav('#contato')}
-                    className="w-full flex items-center justify-center gap-2 cursor-pointer"
-                    style={{
-                      padding: '14px 24px',
-                      background: 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
-                      borderRadius: '8px',
-                      border: 'none',
-                      fontFamily: 'var(--font-sora), Sora, sans-serif',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      color: '#fff',
-                      boxShadow: '0 4px 24px rgba(139,92,246,0.4)',
-                    }}
-                  >
-                    Solicitar Orçamento
-                    <ArrowUpRight size={14} />
-                  </button>
-                </motion.div>
-              </nav>
-
-              {/* Footer */}
-              <div className="px-8 pb-8 pt-4 border-t border-[rgba(255,255,255,0.04)]">
-                <p
-                  className="text-[#444]"
-                  style={{
-                    fontFamily: 'var(--font-inter), Inter, sans-serif',
-                    fontSize: '11px',
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  © 2025 Mixel Sevla
-                </p>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+        {/* Footer */}
+        <div className="px-8 pb-8 pt-4 border-t border-[rgba(255,255,255,0.04)]">
+          <p
+            className="text-[#444]"
+            style={{
+              fontFamily: 'var(--font-inter), Inter, sans-serif',
+              fontSize: '11px',
+              letterSpacing: '0.05em',
+            }}
+          >
+            © 2025 Mixel Sevla
+          </p>
+        </div>
+      </div>
     </>
   )
 }
